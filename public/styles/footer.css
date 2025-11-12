@@ -1,0 +1,133 @@
+footer {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2em;
+
+    padding: 2em 5em;
+
+    background-color: var(--secondary-bg-colour);
+}
+
+footer .footer-image {
+    height: 3em;
+}
+
+footer .footer-image img {
+    height: 100%;
+}
+
+footer .footer-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+}
+
+footer .footer-text .footer-text-top {
+    display: flex;
+    gap: 3em;
+}
+
+footer .footer-text .footer-text-top .footer-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+footer .footer-text .footer-text-top .footer-contact .footer-contact-info {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+}
+
+footer .footer-text .footer-text-top .footer-contact .footer-contact-info {
+    color: white;
+
+    font-size: 1.25em;
+
+    transition: opacity 0.25s;
+}
+
+footer .footer-text .footer-text-top .footer-contact .footer-contact-info:hover {
+    opacity: 0.5;
+}
+
+footer .footer-text .footer-text-top .footer-contact .footer-contact-info svg {
+    height: 1.5em;
+
+    fill: white;
+}
+
+footer .footer-text .footer-text-top .footer-socials {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+footer .footer-text .footer-text-top .footer-socials p {
+    color: white;
+
+    font-size: 1.5em;
+}
+
+footer .footer-text .footer-text-top .footer-socials .footer-socials-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+footer .footer-text .footer-text-top .footer-socials .footer-socials-container a {
+    transition: opacity 0.25s;
+}
+
+footer .footer-text .footer-text-top .footer-socials .footer-socials-container a:hover {
+    opacity: 0.5;
+}
+
+footer .footer-text .footer-text-top .footer-socials .footer-socials-container a svg {
+    height: 1.75em;
+
+    fill: white;
+}
+
+footer .footer-text .footer-text-bottom {
+    display: flex;
+    justify-content: space-between;
+    gap: 2.5em;
+}
+
+footer .footer-text .footer-text-bottom p {
+    color: white;
+}
+
+footer .footer-text .footer-text-bottom p a {
+    color: white;
+    font-weight: 500;
+}
+
+@media (max-width: 1200px) {
+    footer {
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 900px) {
+    footer {
+        font-size: 0.5rem;
+    }
+}
+
+@media (max-width: 600px) {
+    footer {
+        font-size: 0.6rem;
+
+        justify-content: center;
+
+        padding: 2em 4em;
+    }
+
+    footer > a {
+        display: none;
+    }
+}

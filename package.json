@@ -1,0 +1,20 @@
+{
+  "name": "gasmanco.com",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "firebase-admin": "^13.6.0",
+    "nodemailer": "^7.0.10",
+    "pdf-lib": "^1.17.1",
+    "stripe": "^19.3.0"
+  }
+}

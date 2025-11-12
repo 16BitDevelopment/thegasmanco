@@ -1,0 +1,297 @@
+.login-form-container {
+    position: fixed;
+    inset: 0;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-form-container.show {
+    display: flex;
+}
+
+.login-form-container .login-form {
+    width: 25%;
+    min-width: 300px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.5em;
+
+    padding: 2em;
+    
+    border: 1px solid var(--primary-font-colour);
+    border-radius: 1.5em;
+}
+
+.login-form-container .login-form .error {
+    display: none;
+
+    color: red;
+    text-align: center;
+}
+
+.login-form-container .login-form h2 {
+    font-size: 2em;
+}
+
+.login-form-container .login-form .login-form-group {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.login-form-container .login-form .login-form-group label {
+    font-size: 1.25em;
+}
+
+.login-form-container .login-form .login-form-group input {
+    width: 100%;
+
+    font-size: 1.25em;
+
+    background-color: transparent;
+
+    border: none;
+    border-bottom: 1px solid var(--primary-font-colour);
+
+    outline: none;
+}
+
+.login-form-container .login-form .login-form-group input:focus {
+    border-color: var(--secondary-font-colour);
+}
+
+.login-form-container .login-form button {
+    padding: 0.25em 1em;
+
+    font-size: 1.25em;
+
+    background-color: transparent;
+
+    border: 1px solid var(--primary-font-colour);
+    border-radius: 0.5em;
+
+    cursor: pointer;
+
+    transition: all 0.25s;
+}
+
+.login-form-container .login-form button:hover {
+    color: white;
+
+    background-color: var(--primary-font-colour);
+}
+
+.order-preview-container {
+    position: fixed;
+    inset: 0;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    background-color: rgba(0, 0, 0, 0.5);
+
+    z-index: 99;
+}
+
+.order-preview-container.show {
+    display: flex;
+}
+
+.order-preview-container .order-preview {
+    height: 100%;
+    width: 100%;
+    max-width: 500px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2.5rem 0;
+
+    background-color: var(--secondary-bg-colour);
+}
+
+.order-preview-container .order-preview .close-preview {
+    margin-bottom: 2rem;
+
+    color: white;
+    font-size: 2rem;
+
+    border: none;
+    background-color: transparent;
+
+    cursor: pointer;
+}
+
+.order-preview-container .order-preview h2 {
+    color: white;
+
+    font-size: 2.5rem;
+}
+
+.order-preview-container .order-preview h3 {
+    margin-bottom: 1rem;
+
+    color: rgba(255, 255, 255, 0.5);
+
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.order-preview-container .order-preview h4 {
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+
+    color: white;
+
+    font-size: 1.5rem;
+}
+
+.order-preview-container .order-preview p {
+    color: white;
+    font-size: 1.25rem;
+}
+
+.order-preview-container .order-preview .complete-order {
+    margin-top: auto;
+
+    padding: 0.5rem 1rem;
+
+    color: white;
+    font-size: 1.25rem;
+
+    background-color: transparent;
+    border: 2px solid white;
+    border-radius: 1rem;
+
+    cursor: pointer;
+
+    transition: background-color 0.25s, color 0.25s;
+}
+
+.order-preview-container .order-preview .complete-order:hover {
+    color: var(--primary-font-colour);
+    background-color: white;
+}
+
+.orders {
+    --grid-columns: 6em 6em 12em 12em 12em 8em;
+
+    width: 100%;
+
+    display: none;
+    flex-direction: column;
+    padding: 1.5rem;
+    gap: 0.75rem;
+
+    font-size: 1rem;
+
+    overflow: auto;
+}
+
+.orders.show {
+    display: flex;
+}
+
+.orders .navbar {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 1em;
+}
+
+.orders .navbar button {
+    padding: 0.5em 1.25em;
+
+    background-color: transparent;
+    border: 2px solid var(--primary-font-colour);
+    border-radius: 1em;
+
+    cursor: pointer;
+
+    transition: background-color 0.25s, color 0.25s;
+}
+
+.orders .navbar button:hover {
+    color: white;
+    background-color: var(--primary-font-colour);
+}
+
+.orders .heading {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: var(--grid-columns);
+    gap: 1.5em;
+    padding: 0.5em 1em;
+}
+
+.orders .heading p {
+    font-weight: 700;
+}
+
+.orders .order {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: var(--grid-columns);
+    gap: 1.5em;
+
+    padding: 1em;
+
+    background-color: var(--secondary-bg-colour);
+
+    border-radius: 1em;
+
+    transition: opacity 0.25s;
+
+    cursor: pointer;
+
+    overflow: hidden;
+}
+
+.orders .order:hover {
+    opacity: 0.75;
+}
+
+.orders .order p {
+    color: white;
+    text-wrap: nowrap;
+    overflow: hidden;
+}
+
+@media (max-width: 1075px) {
+    .orders .heading p:nth-child(6),
+    .orders .order p:nth-child(6) {
+        display: none;
+    }
+}
+
+@media (max-width: 975px) {
+    .orders .heading p:nth-child(5),
+    .orders .order p:nth-child(5) {
+        display: none;
+    }
+}
+
+@media (max-width: 775px) {
+    .orders .heading p:nth-child(4),
+    .orders .order p:nth-child(4) {
+        display: none;
+    }
+}
+
+@media (max-width: 650px) {
+    .orders {
+        font-size: 0.75rem;
+    }
+}

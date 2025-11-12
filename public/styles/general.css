@@ -1,0 +1,25 @@
+* {
+    --accent-colour: #005fa0;
+    --accent-font-colour: #fff;
+    --primary-bg-colour: #e3eef7;
+    --secondary-bg-colour: #2492dc;
+    --primary-font-colour: #0677c3;
+    --secondary-font-colour: #4eaae7;
+
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+    color: var(--primary-font-colour);
+    text-decoration: none;
+    font-family: "Montserrat", Arial;
+}
+
+:root {
+    background-color: var(--primary-bg-colour);
+}
+
+a {
+    color: var(--accent-colour);
+    font-weight: 500;
+}

@@ -1,0 +1,135 @@
+h1 {
+    margin: 1em 2em;
+
+    font-size: 5em;
+
+    text-align: center;
+}
+
+.banner .section-text h2 {
+    margin-bottom: 2em;
+
+    font-size: 3em;
+    font-weight: 700;
+}
+
+.banner .section-text h3 {
+    color: var(--accent-font-colour);
+    font-size: 1.5em;
+    font-weight: 500;
+}
+
+.banner .section-text p {
+    color: var(--accent-font-colour);
+    font-size: 1.25em;
+}
+
+.order-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.5em;
+
+    padding: 5em;
+}
+
+.main-form {
+    width: 100%;
+
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.5em;
+}
+
+.order-form .form-group {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.order-form .form-group:has(.form-group) {
+    flex-direction: row;
+    gap: 2.5em;
+}
+
+.order-form .form-group:has(.form-group input[type=radio]) {
+    flex-direction: column;
+    gap: 1em;
+}
+
+.order-form .form-group:has(input[type=checkbox]) {
+    flex-direction: row;
+    align-items: center;
+}
+
+.order-form .form-group .form-group:has(input[type=radio]) {
+    flex-direction: row;
+}
+
+.order-form .form-group .input-label {
+    font-size: 1.25em;
+    font-weight: 500;
+}
+
+.order-form .form-group label span {
+    color: var(--secondary-font-colour);
+}
+
+.order-form .form-group select {
+    padding: 0.5em;
+
+    background-color: transparent;
+    border: 1px solid var(--primary-font-colour);
+    border-radius: 0.5em;
+
+    outline: none;
+}
+
+.order-form .form-group input {
+    font-size: 1em;
+
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid var(--primary-font-colour);
+    outline: none;
+}
+
+.order-form button {
+    padding: 0.75em 3em;
+
+    font-size: 1em;
+
+    background-color: transparent;
+    border: 1px solid var(--primary-font-colour);
+    border-radius: 1em;
+
+    cursor: pointer;
+
+    transition: background-color 0.25s, color 0.25s;
+}
+
+.order-form button:hover {
+    color: white;
+    background-color: var(--primary-font-colour);
+}
+
+.order-form .payment-info {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+
+    font-size: 1em;
+}
+
+.order-form .payment-info .note {
+    opacity: 0.75;
+}
+
+.order-form .order-total {
+    font-size: 1.5em;
+}
