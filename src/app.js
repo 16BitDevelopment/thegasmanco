@@ -37,11 +37,11 @@ function sendInvoice(orderData) {
     });
 
     let mailOptions = {
-    from: 'gasmanorder@gmail.com',
-    to: orderData.email,
-    subject: `Gas Man Co Order Invoice #${orderData.id}`,
-    html: `<p>Hello <strong>${orderData.name}</strong>,</p><p>Thank you for your gas order. Please find attatched your order invoice.</p><p>Best,</p><p><strong>The Gas Man Co.</strong></p>`,
-    attachments: [
+        from: 'gasmanorder@gmail.com',
+        to: orderData.email,
+        subject: `Gas Man Co Order Invoice #${orderData.id}`,
+        html: `<p>Hello <strong>${orderData.name}</strong>,</p><p>Thank you for your gas order. Please find attatched your order invoice.</p><p>Best,</p><p><strong>The Gas Man Co.</strong></p>`,
+        attachments: [
             {
                 filename: "invoice.pdf",
                 path: `invoices/invoice-${orderData.id}.pdf`,
@@ -52,7 +52,7 @@ function sendInvoice(orderData) {
     console.log(`Emailing invoice #${orderData.id}`)
     transporter.sendMail(mailOptions, function(error, info){
         if (error) {
-            console.log(error);
+            console.log(`Email error: ${error}`);
         } else {
             console.log('Email sent: ' + info.response);
             
