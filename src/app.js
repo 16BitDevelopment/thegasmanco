@@ -3,7 +3,7 @@ import admin from "firebase-admin";
 import dotenv from "dotenv";
 import nodemailer from "nodemailer";
 import Stripe from "stripe";
-import { getInvoicePdf, deleteInvoice} from "./invoices.js";
+import { getInvoicePdf, deleteInvoice } from "./invoices.js";
 
 dotenv.config();
 
@@ -24,14 +24,16 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 app.use(express.static('public'));
 
 function sendInvoice(orderData) {
+    console.log(`Creating invoice #${orderData.id} pdf`);
     getInvoicePdf(orderData, orderData.id);
+    console.log(`Invoice #${orderData.id} created`)
 
     const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-        user: "gasmanorder@gmail.com",
-        pass: process.env.GOOGLE_APP_PASSWORD,
-    },
+        service: "gmail",
+        auth: {
+            user: "gasmanorder@gmail.com",
+            pass: process.env.GOOGLE_APP_PASSWORD,
+        },
     });
 
     let mailOptions = {
@@ -47,6 +49,7 @@ function sendInvoice(orderData) {
         ]
     };
 
+    console.log(`Emailing invoice #${orderData.id}`)
     transporter.sendMail(mailOptions, function(error, info){
         if (error) {
             console.log(error);
