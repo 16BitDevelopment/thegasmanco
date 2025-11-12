@@ -29,9 +29,8 @@ function sendInvoice(orderData) {
     console.log(`Invoice #${orderData.id} created`)
 
     const transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
+        service: "gmail",
         port: 2525,
-        secure: false,
         auth: {
             user: "gasmanorder@gmail.com",
             pass: process.env.GOOGLE_APP_PASSWORD,
