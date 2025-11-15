@@ -30,7 +30,8 @@ function sendInvoice(orderData) {
 
     const transporter = nodemailer.createTransport({
         service: "gmail",
-        port: 2525,
+        port: 80,
+        secure: true,
         auth: {
             user: "gasmanorder@gmail.com",
             pass: process.env.GOOGLE_APP_PASSWORD,
