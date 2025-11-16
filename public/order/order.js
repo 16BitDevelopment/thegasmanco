@@ -62,10 +62,7 @@ directDepositEl.addEventListener("change", (event) => {
     if (cardEl.value === "Card") {
         paymentInfoEl.innerHTML = `
             <p class="note">Please use your First and Last name as the Payment Description.</p>
-            <p><strong>Bank:</strong> Commonwealth Bank</p>
-            <p><strong>Account Name:</strong> ROBBO Solutions</p>
-            <p><strong>BSB:</strong> 062-692</p>
-            <p><strong>Account Number:</strong> 49200982</p>
+            <p>Bank details provided on order invoice</p>
         `;
 
         stripeGST = false;
