@@ -10,7 +10,7 @@ const directDepositEl = document.getElementById("direct-deposit");
 const paymentInfoEl = document.getElementById("payment-info");
 const orderTotalEl = document.getElementById("order-total");
 
-let stripeGST = true;
+let stripeGST = false;
 
 updateOrderTotal();
 
