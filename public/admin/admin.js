@@ -117,6 +117,7 @@ function loadOrders() {
     };
 
     const promises = [
+        fetchOrders("admin"),
         fetchOrders("mullum"),
         fetchOrders("byron"),
         fetchOrders("federal")

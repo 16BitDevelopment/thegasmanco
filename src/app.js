@@ -82,7 +82,10 @@ function getGasman(location) {
 }
 
 function sendOrder(orderData, res) {
-    const gasman = getGasman(orderData.location);
+    let gasman = "admin"
+    if (orderData.location != "Other") {
+        gasman = getGasman(orderData.location);
+    }
 
     const year = new Date().getFullYear() - 2000;
 
