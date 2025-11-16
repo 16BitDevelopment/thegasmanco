@@ -25,8 +25,8 @@ const time = new Date();
 const gst = 0.1
 const cylinderCost = 155 / 1.1
 
-export function getInvoicePdf(orderData, invoiceId) {
-    editPdf("invoices/template.pdf", `invoices/invoice-${invoiceId}.pdf`, [
+export function getInvoicePdf(orderData) {
+    editPdf("invoices/template.pdf", `invoices/invoice-${orderData.id}.pdf`, [
         {
             text: `${orderData.id}`,
             xPos: 180,

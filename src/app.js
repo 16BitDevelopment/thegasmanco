@@ -1,9 +1,8 @@
 import express from "express";
 import admin from "firebase-admin";
 import dotenv from "dotenv";
-import nodemailer from "nodemailer";
 import Stripe from "stripe";
-import { getInvoicePdf, deleteInvoice } from "./invoices.js";
+import { sendInvoiceEmail } from "./send-email.js";
 
 dotenv.config();
 
@@ -11,7 +10,7 @@ dotenv.config();
 admin.initializeApp({
   credential: admin.credential.cert({
     projectId: process.env.FIREBASE_PROJECT_ID,
-    privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+    privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
     clientEmail: process.env.FIREBASE_CLIENT_EMAIL
   }),
   databaseURL: process.env.FIREBASE_DB_URL
@@ -22,46 +21,6 @@ const app = express();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 app.use(express.static('public'));
-
-function sendInvoice(orderData) {
-    console.log(`Creating invoice #${orderData.id} pdf`);
-    getInvoicePdf(orderData, orderData.id);
-    console.log(`Invoice #${orderData.id} created`)
-
-    const transporter = nodemailer.createTransport({
-        service: "gmail",
-        port: 80,
-        secure: true,
-        auth: {
-            user: "gasmanorder@gmail.com",
-            pass: process.env.GOOGLE_APP_PASSWORD,
-        },
-    });
-
-    let mailOptions = {
-        from: 'gasmanorder@gmail.com',
-        to: orderData.email,
-        subject: `Gas Man Co Order Invoice #${orderData.id}`,
-        html: `<p>Hello <strong>${orderData.name}</strong>,</p><p>Thank you for your gas order. Please find attatched your order invoice.</p><p>Best,</p><p><strong>The Gas Man Co.</strong></p>`,
-        attachments: [
-            {
-                filename: "invoice.pdf",
-                path: `invoices/invoice-${orderData.id}.pdf`,
-            }
-        ]
-    };
-
-    console.log(`Emailing invoice #${orderData.id}`)
-    transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-            console.log(`Email error: ${error}`);
-        } else {
-            console.log('Email sent: ' + info.response);
-            
-            deleteInvoice(orderData.id);
-        }
-    });
-}
 
 function getGasman(location) {
     const mullumLocations = [
@@ -144,7 +103,7 @@ function sendOrder(orderData, res) {
                 .then(() => {
                     console.log(`Added order with # ${year}${String(snapshot.val() + 1).padStart(4, "0")}`);
 
-                    sendInvoice(orderData);
+                    sendInvoiceEmail(orderData);
 
                     res.send("Order Created");
             }).catch(err => console.error("❌ Error writing to Firebase:", err));

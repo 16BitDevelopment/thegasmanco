@@ -7,14 +7,14 @@ import { getDatabase, ref, child, get, set, update, remove } from "https://www.g
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyAtv2aL-6w5jhWgR6DZilCmXm8m3Yiix50",
-    authDomain: "thegasmanco.firebaseapp.com",
-    databaseURL: "https://thegasmanco-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "thegasmanco",
-    storageBucket: "thegasmanco.firebasestorage.app",
-    messagingSenderId: "1262351301",
-    appId: "1:1262351301:web:331c4bff5c0f199dfd91ac"
-};
+    apiKey: "AIzaSyARaN0yKph6XutL6lmzzz5-l-_EOQGPTy0",
+    authDomain: "thegasmanco-2fb92.firebaseapp.com",
+    databaseURL: "https://thegasmanco-2fb92-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "thegasmanco-2fb92",
+    storageBucket: "thegasmanco-2fb92.firebasestorage.app",
+    messagingSenderId: "691232851376",
+    appId: "1:691232851376:web:356ac9e863b0dcbf708275"
+  };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
