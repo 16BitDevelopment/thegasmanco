@@ -22,8 +22,8 @@ async function editPdf(inputPath, outputPath, texts) {
 }
 
 const time = new Date();
-const gst = 0.1
-const cylinderCost = 155 / 1.1
+const gst = 0.1;
+const cylinderCost = 155 / 1.1;
 
 export function getInvoicePdf(orderData) {
     editPdf("invoices/template.pdf", `invoices/invoice-${orderData.id}.pdf`, [
@@ -46,7 +46,7 @@ export function getInvoicePdf(orderData) {
             textSize: 14
         },
         {
-            text: `$${Math.round(cylinderCost * 100) / 100}`,
+            text: `$${Math.round(cylinderCost * 1.1 * 100) / 100}`,
             xPos: 353,
             yPos: 420,
             textSize: 14
@@ -58,7 +58,7 @@ export function getInvoicePdf(orderData) {
             textSize: 14
         },
         {
-            text: `$${Math.round(cylinderCost * orderData.quantity * 100) / 100}`,
+            text: `$${Math.round(cylinderCost * orderData.quantity * 1.1 * 100) / 100}`,
             xPos: 458,
             yPos: 420,
             textSize: 14
