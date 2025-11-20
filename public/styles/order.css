@@ -33,6 +33,11 @@ h1 {
     padding: 5em;
 }
 
+.order-form .server-message {
+    color: red;
+    font-size: 1.5em;
+}
+
 .main-form {
     width: 100%;
 
@@ -40,6 +45,11 @@ h1 {
     flex-direction: column;
     align-items: center;
     gap: 2.5em;
+}
+
+.order-form .input-label {
+    font-size: 1.25em;
+    font-weight: 500;
 }
 
 .order-form .form-group {
@@ -67,11 +77,6 @@ h1 {
 
 .order-form .form-group .form-group:has(input[type=radio]) {
     flex-direction: row;
-}
-
-.order-form .form-group .input-label {
-    font-size: 1.25em;
-    font-weight: 500;
 }
 
 .order-form .form-group label span {
@@ -116,6 +121,24 @@ h1 {
     background-color: var(--primary-font-colour);
 }
 
+.order-form .coupon-container {
+    margin-right: auto;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.order-form .coupon-container .coupon-input {
+    padding: 0.5em;
+
+    background-color: transparent;
+    border: 1px solid var(--primary-font-colour);
+    border-radius: 0.5em;
+    
+    outline: none;
+}
+
 .order-form .payment-info {
     width: 100%;
 
@@ -132,4 +155,8 @@ h1 {
 
 .order-form .order-total {
     font-size: 1.5em;
+}
+
+.order-form .total-note {
+    margin-top: -3em;
 }

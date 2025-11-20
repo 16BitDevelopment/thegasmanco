@@ -23,58 +23,62 @@ async function editPdf(inputPath, outputPath, texts) {
 
 const time = new Date();
 const gst = 0.1;
-const cylinderCost = 155 / 1.1;
 
 export function getInvoicePdf(orderData) {
+    const cylinderCost = orderData.gasCost / 1.1;
+
     editPdf("invoices/template.pdf", `invoices/invoice-${orderData.id}.pdf`, [
+        // Acc details
         {
             text: `${orderData.id}`,
             xPos: 180,
-            yPos: 180,
+            yPos: 162,
+            textSize: 10
+        },
+        // Order info
+        {
+            text: `45kg LPG gas cylinder`,
+            xPos: 75,
+            yPos: 423,
             textSize: 10
         },
         {
-            text: `${time.getDate()}/${time.getMonth() + 1}/${time.getFullYear()}`,
-            xPos: 75,
-            yPos: 420,
-            textSize: 14
-        },
-        {
-            text: `45kg LPG gas cylinder`,
-            xPos: 165,
-            yPos: 420,
-            textSize: 14
-        },
-        {
-            text: `$${Math.round(cylinderCost * 1.1 * 100) / 100}`,
-            xPos: 353,
-            yPos: 420,
-            textSize: 14
-        },
-        {
             text: `${orderData.quantity}`,
-            xPos: 414,
-            yPos: 420,
-            textSize: 14
+            xPos: 275,
+            yPos: 423,
+            textSize: 10
         },
         {
-            text: `$${Math.round(cylinderCost * orderData.quantity * 1.1 * 100) / 100}`,
-            xPos: 458,
-            yPos: 420,
-            textSize: 14
+            text: `$${Math.round(cylinderCost * 100) / 100}`,
+            xPos: 333,
+            yPos: 423,
+            textSize: 10
         },
         {
-            text: `$${Math.round(cylinderCost * orderData.quantity * (gst + 1) * 100) / 100}`,
-            xPos: 458,
-            yPos: 397,
-            textSize: 14
+            text: `$${Math.round(cylinderCost * orderData.quantity * 100) / 100}`,
+            xPos: 453,
+            yPos: 423,
+            textSize: 10
+        },
+        {
+            text: `$${Math.round(cylinderCost * orderData.quantity * 100) / 100}`,
+            xPos: 453,
+            yPos: 403,
+            textSize: 10
         },
         {
             text: `$${Math.round(cylinderCost * orderData.quantity * gst * 100) / 100}`,
-            xPos: 458,
-            yPos: 375,
-            textSize: 14
+            xPos: 453,
+            yPos: 382,
+            textSize: 10
         },
+        {
+            text: `$${Math.round(cylinderCost * orderData.quantity * (gst + 1) * 100) / 100}`,
+            xPos: 453,
+            yPos: 360,
+            textSize: 10
+        },
+        // Top info
         {
             text: `${time.getDate()}/${time.getMonth() + 1}/${time.getFullYear()}`,
             xPos: 150,

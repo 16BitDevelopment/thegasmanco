@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import { google } from 'googleapis'
 import nodemailer from 'nodemailer'
 import { getInvoicePdf, deleteInvoice } from "./invoices.js";
+import { getGasman } from "./gasman.js";
 
 dotenv.config();
 
@@ -42,24 +43,71 @@ export async function sendInvoiceEmail(orderData) {
 
   getInvoicePdf(orderData);
 
-  //EMAIL OPTIONS
-  return new Promise((resolve, reject) => {
-    transport.sendMail({
-        from: MY_EMAIL,
-        to: orderData.email,
-        subject: `Gas Man Co Order Invoice #${orderData.id}`,
-        html: `<p>Hello <strong>${orderData.name}</strong>,</p><p>Thank you for your gas order. Please find attatched your order invoice.</p><p>Best,</p><p><strong>The Gas Man Co.</strong></p>`,
-        attachments: [
-            {
-                filename: "invoice.pdf",
-                path: `invoices/invoice-${orderData.id}.pdf`,
-            }
-        ]
-    }, (err, info) => {
-      if (err) reject(err);
-      console.log("Email sent")
-      deleteInvoice(orderData.id);
-      resolve(info);
+    //EMAIL OPTIONS
+    return new Promise((resolve, reject) => {
+        transport.sendMail({
+                from: MY_EMAIL,
+                to: orderData.email,
+                subject: `Gas Man Co Order Invoice #${orderData.id}`,
+                html: `<p>Hello <strong>${orderData.name}</strong>,</p><p>Thank you for your gas order. Please find attatched your order invoice.</p><p>Best,</p><p><strong>The Gas Man Co.</strong></p>`,
+                attachments: [
+                    {
+                        filename: "invoice.pdf",
+                        path: `invoices/invoice-${orderData.id}.pdf`,
+                    }
+                ]
+            }, (err, info) => {
+            if (err) reject(err);
+            console.log("Order invoice email sent");
+            deleteInvoice(orderData.id);
+            resolve(info);
+        });
     });
-  });
 };
+
+export async function sendNotificationEmail(orderData) {
+    const ACCESS_TOKEN = await oAuth2Client.getAccessToken();
+    const transport = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+        type: "OAuth2",
+        user: MY_EMAIL,
+        clientId: CLIENT_ID,
+        clientSecret: CLIENT_SECRET,
+        refreshToken: REFRESH_TOKEN,
+        accessToken: ACCESS_TOKEN,
+        },
+        tls: {
+        rejectUnauthorized: true,
+        },
+    });
+
+    const gasman = getGasman(orderData.location);
+    let gasmanEmail = "gasmanorder@gmail.com"
+
+    if (gasman == "mullum") {
+        gasmanEmail = "mullumgasman@gmail.com";
+    } else if (gasman == "byron") {
+        gasmanEmail = "byrongasman@gmail.com";
+    } else if (gasman == "federal") {
+        gasmanEmail = "federalgasman@gmail.com";
+    }
+
+    //EMAIL OPTIONS
+    return new Promise((resolve, reject) => {
+        transport.sendMail({
+                from: MY_EMAIL,
+                to: gasmanEmail,
+                subject: `New Order #${orderData.id}`,
+                html: `
+                    <p>Hello,</p>
+                    <p>You got a new order #${orderData.id} from ${orderData.name}.</p>
+                    <p>To see the information on this order, go to the admin panel at the <a href="https://thegasmanco.com/admin">Gas Man Co. Website</a>.</p>
+                `,
+            }, (err, info) => {
+            if (err) reject(err);
+            console.log(`Order notification email sent to ${gasmanEmail}`);
+            resolve(info);
+        });
+    });
+}
