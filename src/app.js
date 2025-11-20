@@ -96,7 +96,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.post("/order", async (req, res) => {
-    const coupons = JSON.parse(process.env.coupons)
+    const coupons = JSON.parse(process.env.COUPONS)
 
     let formData = req.body;
     formData.gasCost = 155;
