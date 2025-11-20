@@ -26,11 +26,12 @@ export function getGasman(location) {
         "Skinners Shoot",
         "South Golden Beach",
         "Telofa",
-        "Tyagorah",
+        "Tyagrah",
         "Yelgun",
         "Lennox Heads",
         "The Pocket",
-        "Middle Pocket"
+        "Middle Pocket",
+        "Ocean Shores"
     ];
     const federalLocations = [
         "Bexhill",
