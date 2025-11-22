@@ -95,7 +95,7 @@ export async function sendNotificationEmail(orderData, toEmail) {
                 `,
             }, (err, info) => {
             if (err) reject(err);
-            console.log(`Order notification email sent to ${gasmanEmail}`);
+            console.log(`Order notification email sent to ${toEmail}`);
             resolve(info);
         });
     });
