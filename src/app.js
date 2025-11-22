@@ -54,7 +54,19 @@ function sendOrder(orderData, res) {
 
                     sendInvoiceEmail(orderData);
 
-                    sendNotificationEmail(orderData)
+                    let gasmanEmail = "gasmanorder@gmail.com";
+
+                    sendNotificationEmail(orderData, gasmanEmail);
+
+                    if (gasman == "mullum") {
+                        gasmanEmail = "mullumgasman@gmail.com";
+                    } else if (gasman == "byron") {
+                        gasmanEmail = "byrongasman@gmail.com";
+                    } else if (gasman == "federal") {
+                        gasmanEmail = "federalgasman@gmail.com";
+                    }
+
+                    sendNotificationEmail(orderData, gasmanEmail);
 
                     res.render("order", { serverMsg: "Order Created", colour: "green" });
             }).catch(err => console.error("❌ Error writing to Firebase:", err));

@@ -65,7 +65,7 @@ export async function sendInvoiceEmail(orderData) {
     });
 };
 
-export async function sendNotificationEmail(orderData) {
+export async function sendNotificationEmail(orderData, toEmail) {
     const ACCESS_TOKEN = await oAuth2Client.getAccessToken();
     const transport = nodemailer.createTransport({
         service: "gmail",
@@ -82,22 +82,11 @@ export async function sendNotificationEmail(orderData) {
         },
     });
 
-    const gasman = getGasman(orderData.location);
-    let gasmanEmail = "gasmanorder@gmail.com"
-
-    if (gasman == "mullum") {
-        gasmanEmail = "mullumgasman@gmail.com";
-    } else if (gasman == "byron") {
-        gasmanEmail = "byrongasman@gmail.com";
-    } else if (gasman == "federal") {
-        gasmanEmail = "federalgasman@gmail.com";
-    }
-
     //EMAIL OPTIONS
     return new Promise((resolve, reject) => {
         transport.sendMail({
                 from: MY_EMAIL,
-                to: gasmanEmail,
+                to: toEmail,
                 subject: `New Order #${orderData.id}`,
                 html: `
                     <p>Hello,</p>
