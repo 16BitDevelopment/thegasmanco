@@ -61,6 +61,8 @@ header .order-gas-btn {
 header .order-gas-btn:hover {
     background-color: var(--accent-colour);
     color: var(--accent-font-colour);
+
+    scale: 1.1;
 }
 
 @media (max-width: 1225px) {

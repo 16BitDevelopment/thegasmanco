@@ -67,7 +67,7 @@ nav .hamburger-btn {
     display: none;
 }
 
-@media (max-width: 850px) {
+@media (max-width: 1150px) {
     #nav-toggle:checked ~ nav .nav-overlay {
         opacity: 0.5;
 
@@ -115,6 +115,12 @@ nav .hamburger-btn {
 
     nav .hamburger-btn {
         display: block;
+    }
+}
+
+@media (max-width: 850px) {
+    nav .logo {
+        height: 3.5em;
     }
 }
 
