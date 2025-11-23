@@ -22,7 +22,7 @@
 
     padding: 2em;
     
-    border: 1px solid var(--primary-font-colour);
+    border: 1px solid var(--accent-colour);
     border-radius: 1.5em;
 }
 
@@ -52,28 +52,32 @@
 .login-form-container .login-form .login-form-group input {
     width: 100%;
 
+    color: var(--accent-colour);
+
     font-size: 1.25em;
 
     background-color: transparent;
 
     border: none;
-    border-bottom: 1px solid var(--primary-font-colour);
+    border-bottom: 1px solid var(--accent-colour);
 
     outline: none;
 }
 
 .login-form-container .login-form .login-form-group input:focus {
-    border-color: var(--secondary-font-colour);
+    border-color: var(--primary-font-colour);
 }
 
 .login-form-container .login-form button {
     padding: 0.25em 1em;
 
+    color: var(--accent-colour);
+
     font-size: 1.25em;
 
     background-color: transparent;
 
-    border: 1px solid var(--primary-font-colour);
+    border: 1px solid var(--accent-colour);
     border-radius: 0.5em;
 
     cursor: pointer;
@@ -84,7 +88,7 @@
 .login-form-container .login-form button:hover {
     color: white;
 
-    background-color: var(--primary-font-colour);
+    background-color: var(--accent-colour);
 }
 
 .order-preview-container {
@@ -176,12 +180,39 @@
 }
 
 .order-preview-container .order-preview .complete-order:hover {
-    color: var(--primary-font-colour);
+    color: var(--accent-colour);
     background-color: white;
 }
 
+.order-preview-container .order-preview .delete-order {
+    color: white;
+    font-size: 1.5em;
+
+    border: none;
+    background-color: transparent;
+
+    cursor: pointer;
+}
+
+.order-preview-container .order-preview .delete-order strong {
+    margin-bottom: 1em;
+
+    color: white;
+}
+
+.order-preview-container .order-preview .delete-order .delete-prompt {
+    margin: 0 0.5em;
+
+    color: white;
+    font-size: 1em;
+    background-color: transparent;
+    border: none;
+
+    cursor: pointer;
+}
+
 .orders {
-    --grid-columns: 6em 6em 12em 12em 12em 8em;
+    --grid-columns: 6em 12em 12em 12em 8em;
 
     width: 100%;
 
@@ -209,11 +240,16 @@
     padding: 0 1em;
 }
 
+.orders .navbar p {
+    color: var(--accent-colour);
+}
+
 .orders .navbar button {
     padding: 0.5em 1.25em;
 
+    color: var(--accent-colour);
     background-color: transparent;
-    border: 2px solid var(--primary-font-colour);
+    border: 2px solid var(--accent-colour);
     border-radius: 1em;
 
     cursor: pointer;
@@ -222,6 +258,45 @@
 }
 
 .orders .navbar button:hover {
+    color: white;
+    background-color: var(--accent-colour);
+}
+
+.orders .orders-menu {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 1em;
+}
+
+.orders .orders-menu .order-status {
+    display: flex;
+
+    border: 1px solid var(--primary-font-colour);
+    border-radius: 0.5em;
+
+    overflow: hidden;
+}
+
+.orders .orders-menu .order-status input {
+    display: none;
+}
+
+.orders .orders-menu .order-status label {
+    padding: 0.5em 0.75em;
+
+    cursor: pointer;
+}
+
+.orders .orders-menu .order-status:has(input#status-incomplete:checked) label#status-incomplete {
+    color: white;
+    background-color: var(--primary-font-colour);
+}
+
+.orders .orders-menu .order-status:has(input#status-complete:checked) label#status-complete {
     color: white;
     background-color: var(--primary-font-colour);
 }

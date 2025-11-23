@@ -87,8 +87,9 @@ h1 {
 .order-form .form-group select {
     padding: 0.5em;
 
+    color: var(--accent-colour);
     background-color: transparent;
-    border: 1px solid var(--primary-font-colour);
+    border: 1px solid var(--accent-colour);
     border-radius: 0.5em;
 
     outline: none;
@@ -97,9 +98,10 @@ h1 {
 .order-form .form-group input {
     font-size: 1em;
 
+    color: var(--accent-colour);
     background-color: transparent;
     border: none;
-    border-bottom: 1px solid var(--primary-font-colour);
+    border-bottom: 1px solid var(--accent-colour);
     outline: none;
 }
 
@@ -108,8 +110,9 @@ h1 {
 
     font-size: 1em;
 
+    color: var(--accent-colour);
     background-color: transparent;
-    border: 1px solid var(--primary-font-colour);
+    border: 1px solid var(--accent-colour);
     border-radius: 1em;
 
     cursor: pointer;
@@ -119,7 +122,7 @@ h1 {
 
 .order-form button:hover {
     color: white;
-    background-color: var(--primary-font-colour);
+    background-color: var(--accent-colour);
 }
 
 .order-form .coupon-container {
@@ -133,8 +136,9 @@ h1 {
 .order-form .coupon-container .coupon-input {
     padding: 0.5em;
 
+    color: var(--accent-colour);
     background-color: transparent;
-    border: 1px solid var(--primary-font-colour);
+    border: 1px solid var(--accent-colour);
     border-radius: 0.5em;
     
     outline: none;

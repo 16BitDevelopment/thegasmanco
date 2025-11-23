@@ -1,8 +1,8 @@
 * {
-    --accent-colour: #005fa0;
+    --accent-colour: #811414;
     --accent-font-colour: #fff;
     --primary-bg-colour: #e3eef7;
-    --secondary-bg-colour: #2492dc;
+    --secondary-bg-colour: #b11212;
     --primary-font-colour: #0677c3;
     --secondary-font-colour: #4eaae7;
 
@@ -20,6 +20,7 @@
 }
 
 a {
-    color: var(--accent-colour);
+    color: var(--font-accent-colour);
     font-weight: 500;
+    text-decoration: underline var(--font-accent-colour);
 }
