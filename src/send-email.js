@@ -25,23 +25,15 @@ oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 
 //YOU CAN PASS MORE ARGUMENTS TO THIS FUNCTION LIKE CC, TEMPLATES, ATTACHMENTS ETC. IM JUST KEEPING IT SIMPLE
 export async function sendInvoiceEmail(orderData) {
-  const ACCESS_TOKEN = await oAuth2Client.getAccessToken();
-  const transport = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      type: "OAuth2",
-      user: MY_EMAIL,
-      clientId: CLIENT_ID,
-      clientSecret: CLIENT_SECRET,
-      refreshToken: REFRESH_TOKEN,
-      accessToken: ACCESS_TOKEN,
-    },
-    tls: {
-      rejectUnauthorized: true,
-    },
-  });
+    const transport = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: "gasmanorder@gmail.com",
+            pass: process.env.GOOGLE_APP_PASSWORD,
+        },
+    });
 
-  getInvoicePdf(orderData);
+    getInvoicePdf(orderData);
 
     //EMAIL OPTIONS
     return new Promise((resolve, reject) => {
@@ -66,19 +58,11 @@ export async function sendInvoiceEmail(orderData) {
 };
 
 export async function sendNotificationEmail(orderData, toEmail) {
-    const ACCESS_TOKEN = await oAuth2Client.getAccessToken();
     const transport = nodemailer.createTransport({
         service: "gmail",
         auth: {
-        type: "OAuth2",
-        user: MY_EMAIL,
-        clientId: CLIENT_ID,
-        clientSecret: CLIENT_SECRET,
-        refreshToken: REFRESH_TOKEN,
-        accessToken: ACCESS_TOKEN,
-        },
-        tls: {
-        rejectUnauthorized: true,
+            user: "gasmanorder@gmail.com",
+            pass: process.env.GOOGLE_APP_PASSWORD,
         },
     });
 
