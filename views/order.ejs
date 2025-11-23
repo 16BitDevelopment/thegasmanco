@@ -10,6 +10,8 @@
 
         <title>Order Gas | Gas Man Co.</title>
 
+        <link rel="icon" type="image/x-icon" href="/images/favicon.png">
+
         <link rel="stylesheet" href="/styles/general.css">
         <link rel="stylesheet" href="/styles/nav.css">
         <link rel="stylesheet" href="/styles/footer.css">
@@ -42,6 +44,8 @@
 
         <h1>Order Gas</h1>
 
+        <p class="server-message" style="color: <%= colour %>;"><%= serverMsg %></p>
+
         <section class="banner">
             <div class="section-text">
                 <h2>Before you order!</h2>
@@ -52,8 +56,6 @@
         </section>
 
         <form class="order-form" action="/order" method="post">
-            <p class="server-message" style="color: <%= colour %>;"><%= serverMsg %></p>
-
             <div class="form-group">
                 <label for="location" class="input-label">Location</label>
                 <select name="location" id="location" required>
