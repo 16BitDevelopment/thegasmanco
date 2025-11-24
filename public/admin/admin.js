@@ -44,6 +44,8 @@ const errorEl = document.getElementById("error-msg");
 
 const ordersEl = document.getElementById("orders");
 const orderPreviewEl = document.getElementById("order-preview");
+const statusIncompleteEl = document.getElementById("status-incomplete");
+const statusCompleteEl = document.getElementById("status-complete");
 
 formEl.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -77,7 +79,7 @@ onAuthStateChanged(auth, (user) => {
         formContainerEl.classList.remove("show");
         ordersEl.classList.add("show");
 
-        loadOrders();
+        getAllOrders(0);
 
         document.title = "Orders"
     } else {
@@ -87,114 +89,191 @@ onAuthStateChanged(auth, (user) => {
         ordersEl.classList.remove("show");
         formContainerEl.classList.add("show");
 
-        document.title = "Admin Login"
+        document.title = "Admin Login";
     }
 });
 
-function loadOrders() {
+statusIncompleteEl.addEventListener("change", (event) => {
+    if (statusIncompleteEl.value == "on") {
+        getAllOrders(0);
+    }
+});
+
+statusCompleteEl.addEventListener("change", (event) => {
+    if (statusCompleteEl.value == "on") {
+        getAllOrders(1);
+    }
+});
+
+let allIncompleteOrders;
+let allCompleteOrders;
+
+function getAllOrders(status = 0) {
+    if (status === 0 && allIncompleteOrders) {
+        loadOrders(allIncompleteOrders);
+
+        return;
+    } else if (status === 1 && allCompleteOrders) {
+        loadOrders(allCompleteOrders);
+        
+        return;
+    }
+
     let allOrders = [];
 
-    console.log(allOrders)
+    const fetchFromLocation = async (location) => {
+        const q = query(
+            ref(db, location),
+            orderByChild("status"),
+            equalTo(status)
+        );
 
-    const fetchOrders = (location) => {
-        return get(child(dbRef, location)).then(snapshot => {
-            if (snapshot.exists()) {
-                const orders = snapshot.val();
-                for (let order in orders) {
-                    if (orders.hasOwnProperty(order)) {
-                        const orderData = JSON.parse(JSON.stringify(orders[order]));
-                        orderData.id = order;
-                        orderData.parent = location;
-                        allOrders.push(orderData);
-                    }
+        const snapshot = await get(q);
+        if (snapshot.exists()) {
+            const orders = snapshot.val();
+
+            for (let order in orders) {
+                if (orders.hasOwnProperty(order)) {
+                    const orderData = JSON.parse(JSON.stringify(orders[order]));
+                    orderData.gasman = location;
+                    orderData.id = order;
+                    allOrders.push(orderData);
                 }
-            } else {
-                console.log(`No data available for ${location}`);
             }
-        }).catch(error => {
-            console.error(`Error fetching ${location} orders:`, error);
-        });
+        } else {
+            console.log(`No data available for ${location}`);
+        }
     };
 
-    const promises = [
-        fetchOrders("admin"),
-        fetchOrders("mullum"),
-        fetchOrders("byron"),
-        fetchOrders("federal")
-    ];
+    const locations = ["admin", "mullum", "byron", "federal"];
 
-    Promise.all(promises)
-        .then(() => {
-            console.log(allOrders); // Logs after all fetches are done
+    const getOrders = async () => {
+        for (const location of locations) {
+            await fetchFromLocation(location);
+        }
 
-            document.querySelectorAll(".order").forEach((el) => {
-                el.remove();
-            });
-            
-            allOrders.forEach((order, idx) => {
-                const timeInDays = Math.floor((Date.now() - order.time) / (1000 * 60 * 60 * 24));
-                const timeInHours = Math.floor(((Date.now() - order.time) % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                
-                const orderEl = document.createElement("div");
-                orderEl.className = "order";
+        if (status === 0) {
+            allIncompleteOrders = Array.from(allOrders);
+        } else if (status === 1) {
+            allCompleteOrders = Array.from(allOrders);
+        }
 
-                orderEl.addEventListener("click", (event) => {
-                    orderPreviewEl.innerHTML = `
-                        <div class="order-preview">
-                            <button class="close-preview" onclick="document.getElementById('order-preview').classList.remove('show')">x</button>
-                            <h2>Order # ${order.id}</h2>
-                            <h3>${order.name}</h3>
-                            <p style="font-size: 1em;">${order.email}</p>
-                            <p style="font-size: 1em;">${order.phone}</p>
-                            <h4>Time Of Request</h4>
-                            <p>${timeInDays} day(s), ${timeInHours} hour(s) ago</p>
-                            <h4>Address</h4>
-                            <p>${order.address}, ${order.location}, ${order.postcode}</p>
-                            <h4>Order</h4>
-                            <p>${order.cylinder}kg x ${order.quantity}</p>
-                            <h4>Payment</h4>
-                            <p>${order.payment} - $${order.cost}</p>
-                            ${order.status === 0 ? "<button class='complete-order' id='complete-order'>Complete Order</button>" : "<h4 style='color: #00FF00;'>Order Complete</h4>"}
-                        </div>
+        loadOrders(allOrders, status);
+    };
+
+    getOrders(); // Loads the orders to the html
+}
+
+function loadOrders(allOrders, status) {
+    console.log(allOrders); // Logs after all fetches are done
+
+    document.querySelectorAll(".order").forEach((el) => {
+        el.remove();
+    });
+    
+    allOrders.forEach((order, idx) => {
+        const timeInDays = Math.floor((Date.now() - order.time) / (1000 * 60 * 60 * 24));
+        const timeInHours = Math.floor(((Date.now() - order.time) % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        
+        const orderEl = document.createElement("div");
+        orderEl.className = "order";
+
+        orderEl.addEventListener("click", (event) => {
+            orderPreviewEl.innerHTML = `
+                <div class="order-preview">
+                    <button class="close-preview" onclick="document.getElementById('order-preview').classList.remove('show')">x</button>
+                    <h2>Order # ${order.id}</h2>
+                    <h3>${order.name}</h3>
+                    <p style="font-size: 1em;">${order.email}</p>
+                    <p style="font-size: 1em;">${order.phone}</p>
+                    <h4>Time Of Request</h4>
+                    <p>${timeInDays} day(s), ${timeInHours} hour(s) ago</p>
+                    <h4>Address</h4>
+                    <p>${order.address}, ${order.location}, ${order.postcode}</p>
+                    <h4>Order</h4>
+                    <p>${order.cylinder}kg x ${order.quantity}</p>
+                    <h4>Payment</h4>
+                    <p>${order.payment} - $${order.cost}</p>
+                    ${order.status === 0 ? "<button class='complete-order' id='complete-order'>Complete Order</button>" : "<h4 style='color: #00FF00;'>Order Complete</h4>"}
+                    <button class='delete-order' id='delete-order'>Delete Order</button>
+                </div>
+            `;
+
+            const completeOrderBtn = document.getElementById("complete-order");
+            const deleteOrderBtn = document.getElementById("delete-order");
+
+            if (completeOrderBtn) {
+                completeOrderBtn.addEventListener("click", (event) => {
+                    set(ref(db, `${order.gasman}/${order.id}/status`), 1);
+
+                    order.status = 1;
+
+                    orderEl.innerHTML = `
+                        <p>${order.id}</p>
+                        <p ${order.status === 0 ? "style='color: red;'>Incomplete" : "style='color: #00FF00;'>Complete"}</p>
+                        <p>${timeInDays == 0 ? "" : timeInDays + " day(s), "}${timeInHours} hour(s)</p>
+                        <p>${order.name}</p>
+                        <p>${order.location}</p>
+                        <p>${order.payment}</p>
                     `;
 
-                    const completeOrderBtn = document.getElementById("complete-order");
+                    orderPreviewEl.classList.remove("show");
+                });
+            }
 
-                    if (completeOrderBtn) {
-                        completeOrderBtn.addEventListener("click", (event) => {
-                            set(ref(db, `${order.parent}/${order.id}/status`), 1);
+            deleteOrderBtn.addEventListener("click", (event) => {
+                event.stopPropagation();
+                event.preventDefault();
 
-                            order.status = 1;
+                deleteOrderBtn.style.cursor = "default";
 
-                            orderEl.innerHTML = `
-                                <p>${order.id}</p>
-                                <p ${order.status === 0 ? "style='color: red;'>Incomplete" : "style='color: #00FF00;'>Complete"}</p>
-                                <p>${timeInDays == 0 ? "" : timeInDays + " day(s), "}${timeInHours} hour(s)</p>
-                                <p>${order.name}</p>
-                                <p>${order.location}</p>
-                                <p>${order.payment}</p>
-                            `;
+                deleteOrderBtn.innerHTML = "<strong>Are you sure?</strong><br>";
 
-                            orderPreviewEl.classList.remove("show");
-                        });
+                const yesEl = document.createElement("button");
+                yesEl.className = "delete-prompt";
+                yesEl.innerText = "Yes";
+
+                yesEl.addEventListener("click", (event) => {
+                    remove(ref(db, `${order.gasman}/${order.id}`));
+
+                    orderPreviewEl.classList.remove("show");
+
+                    if (status === 0) {
+                        allIncompleteOrders = allIncompleteOrders.filter((item) => item !== order)
+                    } else if (status === 1) {
+                        allCompleteOrders = allCompleteOrders.filter((item) => item !== order)
                     }
 
-                    orderPreviewEl.classList.add("show");
+                    getAllOrders(status)
                 });
 
-                orderEl.innerHTML = `
-                    <p>${order.id}</p>
-                    <p ${order.status === 0 ? "style='color: red;'>Incomplete" : "style='color: #00FF00;'>Complete"}</p>
-                    <p>${timeInDays == 0 ? "" : timeInDays + " day(s), "}${timeInHours} hour(s)</p>
-                    <p>${order.name}</p>
-                    <p>${order.location}</p>
-                    <p>${order.payment}</p>
-                `;
+                const noEl = document.createElement("button");
+                noEl.className = "delete-prompt";
+                noEl.innerText = "No";
 
-                ordersEl.append(orderEl)
+                noEl.addEventListener("click", (event) => {
+                    event.stopPropagation();
+
+                    deleteOrderBtn.style.cursor = "pointer";
+
+                    deleteOrderBtn.innerText = "Delete Order";
+                });
+
+                deleteOrderBtn.append(yesEl);
+                deleteOrderBtn.append(noEl);
             });
-        })
-        .catch(error => {
-            console.error("Error fetching orders:", error);
+
+            orderPreviewEl.classList.add("show");
         });
+
+        orderEl.innerHTML = `
+            <p>${order.id}</p>
+            <p>${timeInDays == 0 ? "" : timeInDays + " day(s), "}${timeInHours} hour(s)</p>
+            <p>${order.name}</p>
+            <p>${order.location}</p>
+            <p>${order.payment}</p>
+        `;
+
+        ordersEl.append(orderEl)
+    });
 }
