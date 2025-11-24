@@ -27,52 +27,132 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 app.use(express.static('public'));
 
-function sendOrder(orderData, res) {
+async function addOrder(orderData, orderEmail, res) {
     let gasman = "admin"
     if (orderData.location != "Other") {
         gasman = getGasman(orderData.location);
     }
 
+    await db.ref(`${gasman}/${orderData.id}`).set(orderData);
+
+    console.log(`Added order with # ${orderData.id}`);
+
+    orderData.email = orderEmail;
+
+    sendInvoiceEmail(orderData);
+
+    let gasmanEmail = "gasmanorder@gmail.com";
+
+    sendNotificationEmail(orderData, gasmanEmail);
+
+    if (gasman == "mullum") {
+        gasmanEmail = "mullumgasman@gmail.com";
+    } else if (gasman == "byron") {
+        gasmanEmail = "byrongasman@gmail.com";
+    } else if (gasman == "federal") {
+        gasmanEmail = "federalgasman@gmail.com";
+    }
+
+    sendNotificationEmail(orderData, gasmanEmail);
+
+    res.render("order", { serverMsg: "Order Created", colour: "green" });
+}
+
+async function getClientId(orderData) {
+    let orderPhone = orderData.phone;
+    orderPhone = orderPhone.replace(" ", "");
+    if (orderPhone.replace("+61", "").length >= 9 && orderPhone[0] !== "0") {
+        orderPhone = orderPhone.replace("+61", "");
+        orderPhone = "0" + orderPhone;
+    }
+
+    let orderEmail = orderData.email;
+    orderEmail = orderEmail.replace(" ", "");
+
+    let clientId;
+
+    const clientIdSnapshot = await db
+        .ref("clients")
+        .orderByChild("phone")
+        .equalTo(orderPhone)
+        .get(); 
+
+    if (clientIdSnapshot.exists()) {
+        console.log(clientIdSnapshot.val())
+        clientId = Object.keys(clientIdSnapshot.val())[0];
+
+        return parseInt(clientId);
+    }
+
+    // Make a client
+    const clientSnapshot = await db.ref(`client`).get();
+
+    if (clientSnapshot.exists()) {
+        clientId = clientSnapshot.val() + 1;
+
+        try {
+            await db.ref("client").set(clientId);
+            console.log(`Set client number to ${clientId}`)
+        } catch (error) {
+            console.error("❌ Error writing to Firebase:", error);
+        }
+    } else {
+        clientId = 1;
+
+        try {
+            await db.ref("client").set(1);
+            console.log(`Set client number to ${1}`);
+        } catch (error) {
+            console.error("❌ Error writing to Firebase:", error);
+        }
+    }
+
+    db.ref(`clients/${clientId}`).set({
+        name: orderData.name,
+        address: orderData.address,
+        postcode: orderData.postcode,
+        email: orderEmail,
+        phone: orderPhone
+    });
+
+    return parseInt(clientId);
+}
+
+async function sendOrder(orderData, res) {
     const year = new Date().getFullYear() - 2000;
 
-    db.ref(`${year}`).get().then((snapshot) => {
-        if (snapshot.exists()) {
-            db.ref(`${year}`).set(snapshot.val() + 1)
-                .then(() => console.log(`Set order number for 20${year} to ${snapshot.val() + 1}`))
-                .catch(err => console.error("❌ Error writing to Firebase:", err));
-        } else {
-            db.ref(`${year}`).set(1)
-                .then(() => console.log(`Set order number for 20${year} to 1`))
-                .catch(err => console.error("❌ Error writing to Firebase:", err));
+    const snapshot = await db.ref(`${year}`).get();
+
+    if (snapshot.exists()) {
+        try {
+            await db.ref(`${year}`).set(snapshot.val() + 1);
+            console.log(`Set order number for 20${year} to ${snapshot.val() + 1}`);
+        } catch (error) {
+            console.error("❌ Error writing to Firebase:", error);
         }
+    } else {
+        try {
+            await db.ref(`${year}`).set(1);
+            console.log(`Set order number for 20${year} to 1`);
+        } catch (error) {
+            console.error("❌ Error writing to Firebase:", error);
+        }
+    }
 
-        orderData.id = `${year}${String(snapshot.val() + 1).padStart(4, "0")}`;
+    orderData.id = `${year}${String(snapshot.val() + 1).padStart(4, "0")}`;
 
-        db.ref(`${gasman}/${orderData.id}`).set(orderData)
-                .then(() => {
-                    console.log(`Added order with # ${year}${String(snapshot.val() + 1).padStart(4, "0")}`);
+    // Get client id
+    orderData.clientId = await getClientId(orderData);
 
-                    sendInvoiceEmail(orderData);
+    const orderEmail = orderData.email;
 
-                    let gasmanEmail = "gasmanorder@gmail.com";
+    delete orderData.name;
+    delete orderData.address;
+    delete orderData.postcode;
+    delete orderData.email;
+    delete orderData.phone;
 
-                    sendNotificationEmail(orderData, gasmanEmail);
-
-                    if (gasman == "mullum") {
-                        gasmanEmail = "mullumgasman@gmail.com";
-                    } else if (gasman == "byron") {
-                        gasmanEmail = "byrongasman@gmail.com";
-                    } else if (gasman == "federal") {
-                        gasmanEmail = "federalgasman@gmail.com";
-                    }
-
-                    sendNotificationEmail(orderData, gasmanEmail);
-
-                    res.render("order", { serverMsg: "Order Created", colour: "green" });
-            }).catch(err => console.error("❌ Error writing to Firebase:", err));
-    }).catch(error => {
-        console.error(`Error fetching data`, error);
-    });
+    addOrder(orderData, orderEmail, res);
 }
 
 app.post("/webhook", express.raw({ type: "application/json" }), (req, res) => {

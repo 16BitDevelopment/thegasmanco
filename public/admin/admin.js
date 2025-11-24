@@ -42,7 +42,11 @@ const emailEl = document.getElementById("email");
 const passwordEl = document.getElementById("password");
 const errorEl = document.getElementById("error-msg");
 
+const adminContainerEl = document.getElementById("admin-container");
 const ordersEl = document.getElementById("orders");
+const clientsEl = document.getElementById("clients");
+const showOrdersBtn = document.getElementById("show-orders-btn");
+const showClientsBtn = document.getElementById("show-clients-btn");
 const orderPreviewEl = document.getElementById("order-preview");
 const statusIncompleteEl = document.getElementById("status-incomplete");
 const statusCompleteEl = document.getElementById("status-complete");
@@ -77,7 +81,9 @@ onAuthStateChanged(auth, (user) => {
         document.getElementById("navbar-email").innerText = user.email;
 
         formContainerEl.classList.remove("show");
+        adminContainerEl.classList.add("show");
         ordersEl.classList.add("show");
+        clientsEl.classList.remove("show");
 
         getAllOrders(0);
 
@@ -86,11 +92,21 @@ onAuthStateChanged(auth, (user) => {
         emailEl.value = "";
         passwordEl.value = "";
 
-        ordersEl.classList.remove("show");
+        adminContainerEl.classList.remove("show");
         formContainerEl.classList.add("show");
 
         document.title = "Admin Login";
     }
+});
+
+showOrdersBtn.addEventListener("click", (event) => {
+    ordersEl.classList.add("show");
+    clientsEl.classList.remove("show");
+});
+
+showClientsBtn.addEventListener("click", (event) => {
+    ordersEl.classList.remove("show");
+    clientsEl.classList.add("show");
 });
 
 statusIncompleteEl.addEventListener("change", (event) => {
@@ -208,14 +224,10 @@ function loadOrders(allOrders, status) {
 
                     order.status = 1;
 
-                    orderEl.innerHTML = `
-                        <p>${order.id}</p>
-                        <p ${order.status === 0 ? "style='color: red;'>Incomplete" : "style='color: #00FF00;'>Complete"}</p>
-                        <p>${timeInDays == 0 ? "" : timeInDays + " day(s), "}${timeInHours} hour(s)</p>
-                        <p>${order.name}</p>
-                        <p>${order.location}</p>
-                        <p>${order.payment}</p>
-                    `;
+                    orderEl.remove();
+
+                    allIncompleteOrders = allIncompleteOrders.filter((item) => item !== order);
+                    allCompleteOrders.push(order)
 
                     orderPreviewEl.classList.remove("show");
                 });

@@ -2,7 +2,6 @@ import dotenv from "dotenv";
 import { google } from 'googleapis'
 import nodemailer from 'nodemailer'
 import { getInvoicePdf, deleteInvoice } from "./invoices.js";
-import { getGasman } from "./gasman.js";
 
 dotenv.config();
 
@@ -33,28 +32,28 @@ export async function sendInvoiceEmail(orderData) {
         },
     });
 
-    getInvoicePdf(orderData);
+    let mailOptions = {
+        from: MY_EMAIL,
+        to: orderData.email,
+        subject: `Gas Man Co Order Invoice #${orderData.id}`,
+        html: `<p>Hello <strong>${orderData.name}</strong>,</p><p>Thank you for your gas order. Please find attatched your order invoice.</p><p>Best,</p><p><strong>The Gas Man Co.</strong></p>`,
+        attachments: [
+            {
+                filename: "invoice.pdf",
+                path: `invoices/invoice-${orderData.id}.pdf`,
+            }
+        ]
+    };
 
-    //EMAIL OPTIONS
-    return new Promise((resolve, reject) => {
-        transport.sendMail({
-                from: MY_EMAIL,
-                to: orderData.email,
-                subject: `Gas Man Co Order Invoice #${orderData.id}`,
-                html: `<p>Hello <strong>${orderData.name}</strong>,</p><p>Thank you for your gas order. Please find attatched your order invoice.</p><p>Best,</p><p><strong>The Gas Man Co.</strong></p>`,
-                attachments: [
-                    {
-                        filename: "invoice.pdf",
-                        path: `invoices/invoice-${orderData.id}.pdf`,
-                    }
-                ]
-            }, (err, info) => {
-            if (err) reject(err);
+    transport.sendMail(mailOptions, function(error, info){
+        if (error) {
+            console.log(error);
+        } else {
             console.log("Order invoice email sent");
-            deleteInvoice(orderData.id);
-            resolve(info);
-        });
+        }
     });
+
+    getInvoicePdf(orderData);
 };
 
 export async function sendNotificationEmail(orderData, toEmail) {
@@ -66,21 +65,22 @@ export async function sendNotificationEmail(orderData, toEmail) {
         },
     });
 
-    //EMAIL OPTIONS
-    return new Promise((resolve, reject) => {
-        transport.sendMail({
-                from: MY_EMAIL,
-                to: toEmail,
-                subject: `New Order #${orderData.id}`,
-                html: `
-                    <p>Hello,</p>
-                    <p>You got a new order #${orderData.id} from ${orderData.name}.</p>
-                    <p>To see the information on this order, go to the admin panel at the <a href="https://thegasmanco.com/admin">Gas Man Co. Website</a>.</p>
-                `,
-            }, (err, info) => {
-            if (err) reject(err);
+    let mailOptions = {
+        from: 'MY_EMAIL',
+        to: toEmail,
+        subject: `New Order #${orderData.id}`,
+        html: `
+            <p>Hello,</p>
+            <p>You got a new order #${orderData.id} from ${orderData.name}.</p>
+            <p>To see the information on this order, go to the admin panel at the <a href="https://thegasmanco.com/admin">Gas Man Co. Website</a>.</p>
+        `
+    };
+
+    transport.sendMail(mailOptions, function(error, info){
+        if (error) {
+            console.log(error);
+        } else {
             console.log(`Order notification email sent to ${toEmail}`);
-            resolve(info);
-        });
+        }
     });
 }

@@ -32,26 +32,31 @@
 
         <div class="order-preview-container" id="order-preview"></div>
 
-        <div class="orders" id="orders">
+        <div class="admin-container" id="admin-container">
             <div class="navbar">
+                <button id="show-orders-btn">Orders</button>
+                <button id="show-clients-btn">Clients</button>
                 <p id="navbar-email"></p>
-                <button onclick="logOut()">Log Out</button>
+                <button class="log-out-btn" onclick="logOut()">Log Out</button>
             </div>
-            <div class="orders-menu">
-                <div class="order-status">
-                    <input type="radio" id="status-incomplete" name="order-status" checked>
-                    <label for="status-incomplete" id="status-incomplete">Incomplete</label>
-                    <input type="radio" id="status-complete" name="order-status">
-                    <label for="status-complete" id="status-complete">Complete</label>
+            <div class="orders show" id="orders">
+                <div class="orders-menu">
+                    <div class="order-status">
+                        <input type="radio" id="status-incomplete" name="order-status" checked>
+                        <label for="status-incomplete" id="status-incomplete">Incomplete</label>
+                        <input type="radio" id="status-complete" name="order-status">
+                        <label for="status-complete" id="status-complete">Complete</label>
+                    </div>
+                </div>
+                <div class="heading">
+                    <p>Order #</p>
+                    <p>Request Time (Ago)</p>
+                    <p>Name</p>
+                    <p>Location</p>
+                    <p>Payment</p>
                 </div>
             </div>
-            <div class="heading">
-                <p>Order #</p>
-                <p>Request Time (Ago)</p>
-                <p>Name</p>
-                <p>Location</p>
-                <p>Payment</p>
-            </div>
+            <div class="clients" id="clients"></div>
         </div>
 
         <script type="module" src="/admin/admin.js"></script>
