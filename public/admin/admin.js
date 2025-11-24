@@ -124,6 +124,12 @@ statusCompleteEl.addEventListener("change", (event) => {
 let allIncompleteOrders;
 let allCompleteOrders;
 
+async function getClientDetails(clientId) {
+    const detailsSnapshot = await get(ref(db, `clients/${clientId}`));
+
+    return detailsSnapshot.val();
+}
+
 function getAllOrders(status = 0) {
     if (status === 0 && allIncompleteOrders) {
         loadOrders(allIncompleteOrders);
@@ -149,12 +155,20 @@ function getAllOrders(status = 0) {
             const orders = snapshot.val();
 
             for (let order in orders) {
-                if (orders.hasOwnProperty(order)) {
-                    const orderData = JSON.parse(JSON.stringify(orders[order]));
-                    orderData.gasman = location;
-                    orderData.id = order;
-                    allOrders.push(orderData);
+                const orderData = JSON.parse(JSON.stringify(orders[order]));
+                if (orderData.hasOwnProperty("clientId")) {
+                    const clientDetails = await getClientDetails(orderData.clientId);
+
+                    orderData.name = clientDetails.name;
+                    orderData.email = clientDetails.email;
+                    orderData.phone = clientDetails.phone;
+                    orderData.address = clientDetails.address;
+                    orderData.postcode = clientDetails.postcode;
                 }
+
+                orderData.gasman = location;
+                orderData.id = order;
+                allOrders.push(orderData);
             }
         } else {
             console.log(`No data available for ${location}`);
