@@ -111,12 +111,20 @@ showClientsBtn.addEventListener("click", (event) => {
 
 statusIncompleteEl.addEventListener("change", (event) => {
     if (statusIncompleteEl.value == "on") {
+        document.querySelectorAll(".order").forEach((el) => {
+            el.remove();
+        });
+
         getAllOrders(0);
     }
 });
 
 statusCompleteEl.addEventListener("change", (event) => {
     if (statusCompleteEl.value == "on") {
+        document.querySelectorAll(".order").forEach((el) => {
+            el.remove();
+        });
+
         getAllOrders(1);
     }
 });
