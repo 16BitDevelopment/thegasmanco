@@ -8,6 +8,8 @@
 
         <title>Admin Login</title>
 
+        <link rel="icon" type="image/x-icon" href="/images/favicon.png">
+
         <link rel="stylesheet" href="/styles/general.css">
         <link rel="stylesheet" href="/styles/admin.css">
     </head>
@@ -35,9 +37,16 @@
                 <p id="navbar-email"></p>
                 <button onclick="logOut()">Log Out</button>
             </div>
+            <div class="orders-menu">
+                <div class="order-status">
+                    <input type="radio" id="status-incomplete" name="order-status" checked>
+                    <label for="status-incomplete" id="status-incomplete">Incomplete</label>
+                    <input type="radio" id="status-complete" name="order-status">
+                    <label for="status-complete" id="status-complete">Complete</label>
+                </div>
+            </div>
             <div class="heading">
                 <p>Order #</p>
-                <p>Status</p>
                 <p>Request Time (Ago)</p>
                 <p>Name</p>
                 <p>Location</p>
