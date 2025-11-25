@@ -116,16 +116,19 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 2.5rem 0;
+    padding: 2.5em 0;
 
     background-color: var(--secondary-bg-colour);
+
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .order-preview-container .order-preview .close-preview {
-    margin-bottom: 2rem;
+    margin-bottom: 2em;
 
     color: white;
-    font-size: 2rem;
+    font-size: 2em;
 
     border: none;
     background-color: transparent;
@@ -136,43 +139,44 @@
 .order-preview-container .order-preview h2 {
     color: white;
 
-    font-size: 2.5rem;
+    font-size: 2.5em;
 }
 
 .order-preview-container .order-preview h3 {
-    margin-bottom: 1rem;
+    margin-bottom: 1em;
 
     color: rgba(255, 255, 255, 0.5);
 
-    font-size: 1.5rem;
+    font-size: 1.5em;
     font-weight: 500;
 }
 
 .order-preview-container .order-preview h4 {
-    margin-top: 2rem;
-    margin-bottom: 0.75rem;
+    margin-top: 2em;
+    margin-bottom: 0.75em;
 
     color: white;
 
-    font-size: 1.5rem;
+    font-size: 1.5em;
 }
 
 .order-preview-container .order-preview p {
     color: white;
-    font-size: 1.25rem;
+    font-size: 1.25em;
+    text-align: center;
 }
 
 .order-preview-container .order-preview .complete-order {
-    margin-top: auto;
+    margin-top: 2.5em;
 
-    padding: 0.5rem 1rem;
+    padding: 0.5em 1em;
 
     color: white;
-    font-size: 1.25rem;
+    font-size: 1.25em;
 
     background-color: transparent;
     border: 2px solid white;
-    border-radius: 1rem;
+    border-radius: 1em;
 
     cursor: pointer;
 
@@ -185,6 +189,8 @@
 }
 
 .order-preview-container .order-preview .delete-order {
+    margin-top: 1em;
+
     color: white;
     font-size: 1.5em;
 
@@ -212,16 +218,14 @@
 }
 
 .admin-container {
-    --grid-columns: 6em 12em 12em 12em 8em;
-
     width: 100%;
 
     display: none;
     flex-direction: column;
-    padding: 1.5rem;
-    gap: 0.75rem;
+    padding: 1.5em;
+    gap: 0.75em;
 
-    font-size: 1rem;
+    font-size: 1em;
 
     overflow: auto;
 }
@@ -256,12 +260,13 @@
 }
 
 .admin-container .navbar .log-out-btn {
-    padding: 0.5em 1.25em;
+    padding: 0.5em 1em;
 
     color: var(--accent-colour);
+    font-size: 0.75em;
     font-weight: 500;
     background-color: transparent;
-    border: 2px solid var(--accent-colour);
+    border: 1px solid var(--accent-colour);
     border-radius: 1em;
 
     cursor: pointer;
@@ -275,15 +280,18 @@
 }
 
 .admin-container .orders {
+    --grid-columns: 6em 12em 12em 12em 8em;
+
     width: 100%;
 
     display: none;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.75em;
 
-    font-size: 1rem;
+    font-size: 1em;
 
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .admin-container .orders.show {
@@ -372,9 +380,76 @@
     overflow: hidden;
 }
 
+.admin-container .clients {
+    --grid-columns: 6em 12em 16em 10em;
+
+    width: 100%;
+
+    display: none;
+    flex-direction: column;
+    gap: 0.75em;
+
+    font-size: 1em;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.admin-container .clients.show {
+    display: flex;
+}
+
+.admin-container .clients .heading {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: var(--grid-columns);
+    gap: 1.5em;
+    padding: 0.5em 1em;
+}
+
+.admin-container .clients .heading p {
+    font-weight: 700;
+}
+
+.admin-container .clients .client {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: var(--grid-columns);
+    gap: 1.5em;
+
+    padding: 1em;
+
+    background-color: var(--secondary-bg-colour);
+
+    border-radius: 1em;
+
+    transition: opacity 0.25s;
+
+    cursor: pointer;
+
+    overflow: hidden;
+}
+
+.admin-container .clients .client:hover {
+    opacity: 0.75;
+}
+
+.admin-container .clients .client p {
+    color: white;
+    text-wrap: nowrap;
+    overflow: hidden;
+}
+
 @media (max-width: 1075px) {
     .admin-container .orders .heading p:nth-child(6),
     .admin-container .orders .order p:nth-child(6) {
+        display: none;
+    }
+
+    .admin-container .clients .heading p:nth-child(6),
+    .admin-container .clients .client p:nth-child(6) {
         display: none;
     }
 }
@@ -384,6 +459,11 @@
     .admin-container .orders .order p:nth-child(5) {
         display: none;
     }
+
+    .admin-container .clients .heading p:nth-child(5),
+    .admin-container .clients .client p:nth-child(5) {
+        display: none;
+    }
 }
 
 @media (max-width: 775px) {
@@ -391,10 +471,15 @@
     .admin-container .orders .order p:nth-child(4) {
         display: none;
     }
+
+    .admin-container .clients .heading p:nth-child(4),
+    .admin-container .clients .client p:nth-child(4) {
+        display: none;
+    }
 }
 
-@media (max-width: 650px) {
+@media (max-width: 550px) {
     .admin-container {
-        font-size: 0.75rem;
+        font-size: 0.8rem;
     }
 }

@@ -105,6 +105,8 @@ showOrdersBtn.addEventListener("click", (event) => {
 });
 
 showClientsBtn.addEventListener("click", (event) => {
+    getAllClients(0);
+
     ordersEl.classList.remove("show");
     clientsEl.classList.add("show");
 });
@@ -131,11 +133,18 @@ statusCompleteEl.addEventListener("change", (event) => {
 
 let allIncompleteOrders;
 let allCompleteOrders;
+let allClients = {};
+let clientsNum;
+
+const pagelength = 10;
 
 async function getClientDetails(clientId) {
     const detailsSnapshot = await get(ref(db, `clients/${clientId}`));
+    const client = detailsSnapshot.val();
 
-    return detailsSnapshot.val();
+    allClients[clientId] = client;
+
+    return client;
 }
 
 function getAllOrders(status = 0) {
@@ -308,6 +317,61 @@ function loadOrders(allOrders, status) {
             <p>${order.payment}</p>
         `;
 
-        ordersEl.append(orderEl)
+        ordersEl.append(orderEl);
     });
+}
+
+async function getAllClients(page = 0) {
+    const clientsNumSnapshot = await get(ref(db, `client`));
+    clientsNum = clientsNumSnapshot.val();
+
+    for (let i = 0; i < pagelength; i++) {
+        const clientId = page * pagelength + i + 1;
+
+        if (allClients.hasOwnProperty(clientId) || clientId > clientsNum) {
+            continue;
+        }
+
+        const clientSnapshot = await get(ref(db, `clients/${clientId}`));
+        const clientData = clientSnapshot.val();
+
+        allClients[clientId] = {
+            id: clientId,
+            name: clientData.name,
+            email: clientData.email,
+            phone: clientData.phone,
+            address: clientData.address,
+            postcode: clientData.postcode
+        };
+    }
+
+    loadClients(page)
+}
+
+function loadClients(page = 0) {
+    document.querySelectorAll(".client").forEach((el) => {
+        el.remove();
+    });
+
+    for (let i = 0; i < pagelength; i++) {
+        const clientId = page * pagelength + i + 1;
+
+        if (clientId > clientsNum) {
+            continue;
+        }
+
+        const clientData = allClients[clientId];
+
+        const clientEl = document.createElement("div");
+        clientEl.className = "client"; 
+
+        clientEl.innerHTML = `
+            <p>${String(clientId).padStart(4, "0")}</p>
+            <p>${clientData.name}</p>
+            <p>${clientData.email}</p>
+            <p>${clientData.phone}</p>
+        `;
+
+        clientsEl.append(clientEl);
+    }
 }

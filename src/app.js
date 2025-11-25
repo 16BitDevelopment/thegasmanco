@@ -78,7 +78,6 @@ async function getClientId(orderData) {
         .get(); 
 
     if (clientIdSnapshot.exists()) {
-        console.log(clientIdSnapshot.val())
         clientId = Object.keys(clientIdSnapshot.val())[0];
 
         return parseInt(clientId);
@@ -92,7 +91,7 @@ async function getClientId(orderData) {
 
         try {
             await db.ref("client").set(clientId);
-            console.log(`Set client number to ${clientId}`)
+            console.log(`Set client number to ${clientId}`);
         } catch (error) {
             console.error("❌ Error writing to Firebase:", error);
         }
