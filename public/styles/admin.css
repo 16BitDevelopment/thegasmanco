@@ -91,7 +91,7 @@
     background-color: var(--accent-colour);
 }
 
-.order-preview-container {
+.item-preview-container {
     position: fixed;
     inset: 0;
 
@@ -104,11 +104,11 @@
     z-index: 99;
 }
 
-.order-preview-container.show {
+.item-preview-container.show {
     display: flex;
 }
 
-.order-preview-container .order-preview {
+.item-preview-container .item-preview {
     height: 100%;
     width: 100%;
     max-width: 500px;
@@ -124,7 +124,7 @@
     overflow-y: auto;
 }
 
-.order-preview-container .order-preview .close-preview {
+.item-preview-container .item-preview .close-preview {
     margin-bottom: 2em;
 
     color: white;
@@ -136,13 +136,13 @@
     cursor: pointer;
 }
 
-.order-preview-container .order-preview h2 {
+.item-preview-container .item-preview h2 {
     color: white;
 
     font-size: 2.5em;
 }
 
-.order-preview-container .order-preview h3 {
+.item-preview-container .item-preview h3 {
     margin-bottom: 1em;
 
     color: rgba(255, 255, 255, 0.5);
@@ -151,7 +151,7 @@
     font-weight: 500;
 }
 
-.order-preview-container .order-preview h4 {
+.item-preview-container .item-preview h4 {
     margin-top: 2em;
     margin-bottom: 0.75em;
 
@@ -160,13 +160,17 @@
     font-size: 1.5em;
 }
 
-.order-preview-container .order-preview p {
+.item-preview-container .item-preview p {
     color: white;
     font-size: 1.25em;
     text-align: center;
 }
 
-.order-preview-container .order-preview .complete-order {
+.item-preview-container .item-preview p strong {
+    color: white;
+}
+
+.item-preview-container .item-preview .complete-order {
     margin-top: 2.5em;
 
     padding: 0.5em 1em;
@@ -183,12 +187,12 @@
     transition: background-color 0.25s, color 0.25s;
 }
 
-.order-preview-container .order-preview .complete-order:hover {
+.item-preview-container .item-preview .complete-order:hover {
     color: var(--accent-colour);
     background-color: white;
 }
 
-.order-preview-container .order-preview .delete-order {
+.item-preview-container .item-preview .delete-order {
     margin-top: 1em;
 
     color: white;
@@ -200,13 +204,13 @@
     cursor: pointer;
 }
 
-.order-preview-container .order-preview .delete-order strong {
+.item-preview-container .item-preview .delete-order strong {
     margin-bottom: 1em;
 
     color: white;
 }
 
-.order-preview-container .order-preview .delete-order .delete-prompt {
+.item-preview-container .item-preview .delete-order .delete-prompt {
     margin: 0 0.5em;
 
     color: white;
@@ -410,6 +414,34 @@
 
 .admin-container .clients .heading p {
     font-weight: 700;
+}
+
+.admin-container .clients .clients-menu {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 1em;
+}
+
+.admin-container .clients .clients-menu .clients-page {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+
+    font-weight: 500;
+}
+
+.admin-container .clients .clients-menu .clients-page button {
+    font-size: 1.25em;
+    font-weight: 500;
+
+    background-color: transparent;
+    border: none;
+
+    cursor: pointer;
 }
 
 .admin-container .clients .client {

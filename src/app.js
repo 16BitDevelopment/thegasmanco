@@ -27,7 +27,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 app.use(express.static('public'));
 
-async function addOrder(orderData, orderEmail, res) {
+async function addOrder(orderData, orderEmail, orderName, res) {
     let gasman = "admin"
     if (orderData.location != "Other") {
         gasman = getGasman(orderData.location);
@@ -38,6 +38,7 @@ async function addOrder(orderData, orderEmail, res) {
     console.log(`Added order with # ${orderData.id}`);
 
     orderData.email = orderEmail;
+    orderData.name = orderName;
 
     sendInvoiceEmail(orderData);
 
@@ -144,6 +145,7 @@ async function sendOrder(orderData, res) {
     orderData.clientId = await getClientId(orderData);
 
     const orderEmail = orderData.email;
+    const orderName = orderData.name;
 
     delete orderData.name;
     delete orderData.address;
@@ -151,7 +153,7 @@ async function sendOrder(orderData, res) {
     delete orderData.email;
     delete orderData.phone;
 
-    addOrder(orderData, orderEmail, res);
+    addOrder(orderData, orderEmail, orderName, res);
 }
 
 app.post("/webhook", express.raw({ type: "application/json" }), (req, res) => {

@@ -47,9 +47,18 @@ const ordersEl = document.getElementById("orders");
 const clientsEl = document.getElementById("clients");
 const showOrdersBtn = document.getElementById("show-orders-btn");
 const showClientsBtn = document.getElementById("show-clients-btn");
-const orderPreviewEl = document.getElementById("order-preview");
+const itemPreviewEl = document.getElementById("item-preview");
 const statusIncompleteEl = document.getElementById("status-incomplete");
 const statusCompleteEl = document.getElementById("status-complete");
+const clientsPageEl = document.getElementById("clients-page");
+const clientsPageNextEl = document.getElementById("clients-page-next");
+const clientsPageBackEl = document.getElementById("clients-page-back");
+
+let allIncompleteOrders;
+let allCompleteOrders;
+let allClients = {};
+let clientsNum;
+let clientPage = 1;
 
 formEl.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -105,7 +114,7 @@ showOrdersBtn.addEventListener("click", (event) => {
 });
 
 showClientsBtn.addEventListener("click", (event) => {
-    getAllClients(0);
+    getAllClients(clientPage - 1);
 
     ordersEl.classList.remove("show");
     clientsEl.classList.add("show");
@@ -131,10 +140,15 @@ statusCompleteEl.addEventListener("change", (event) => {
     }
 });
 
-let allIncompleteOrders;
-let allCompleteOrders;
-let allClients = {};
-let clientsNum;
+clientsPageNextEl.addEventListener("click", (event) => {
+    clientPage += 1;
+    getAllClients(clientPage - 1);
+});
+
+clientsPageBackEl.addEventListener("click", (event) => {
+    clientPage -= 1;
+    getAllClients(clientPage - 1);
+});
 
 const pagelength = 10;
 
@@ -226,9 +240,9 @@ function loadOrders(allOrders, status) {
         orderEl.className = "order";
 
         orderEl.addEventListener("click", (event) => {
-            orderPreviewEl.innerHTML = `
-                <div class="order-preview">
-                    <button class="close-preview" onclick="document.getElementById('order-preview').classList.remove('show')">x</button>
+            itemPreviewEl.innerHTML = `
+                <div class="item-preview">
+                    <button class="close-preview" onclick="document.getElementById('item-preview').classList.remove('show')">x</button>
                     <h2>Order # ${order.id}</h2>
                     <h3>${order.name}</h3>
                     <p style="font-size: 1em;">${order.email}</p>
@@ -260,7 +274,7 @@ function loadOrders(allOrders, status) {
                     allIncompleteOrders = allIncompleteOrders.filter((item) => item !== order);
                     allCompleteOrders.push(order)
 
-                    orderPreviewEl.classList.remove("show");
+                    itemPreviewEl.classList.remove("show");
                 });
             }
 
@@ -279,7 +293,7 @@ function loadOrders(allOrders, status) {
                 yesEl.addEventListener("click", (event) => {
                     remove(ref(db, `${order.gasman}/${order.id}`));
 
-                    orderPreviewEl.classList.remove("show");
+                    itemPreviewEl.classList.remove("show");
 
                     if (status === 0) {
                         allIncompleteOrders = allIncompleteOrders.filter((item) => item !== order)
@@ -306,7 +320,7 @@ function loadOrders(allOrders, status) {
                 deleteOrderBtn.append(noEl);
             });
 
-            orderPreviewEl.classList.add("show");
+            itemPreviewEl.classList.add("show");
         });
 
         orderEl.innerHTML = `
@@ -324,6 +338,16 @@ function loadOrders(allOrders, status) {
 async function getAllClients(page = 0) {
     const clientsNumSnapshot = await get(ref(db, `client`));
     clientsNum = clientsNumSnapshot.val();
+
+    const pageNum = Math.ceil(clientsNum / 10)
+
+    if (page + 1 > pageNum) {
+        clientPage = 1
+        page = 0
+    } else if (page < 0) {
+        clientPage = pageNum;
+        page = pageNum - 1;
+    }
 
     for (let i = 0; i < pagelength; i++) {
         const clientId = page * pagelength + i + 1;
@@ -349,6 +373,8 @@ async function getAllClients(page = 0) {
 }
 
 function loadClients(page = 0) {
+    clientsPageEl.innerHTML = `Page ${clientPage} / ${Math.ceil(clientsNum / pagelength)}`;
+
     document.querySelectorAll(".client").forEach((el) => {
         el.remove();
     });
@@ -364,6 +390,22 @@ function loadClients(page = 0) {
 
         const clientEl = document.createElement("div");
         clientEl.className = "client"; 
+
+        clientEl.addEventListener("click", (event) => {
+            itemPreviewEl.innerHTML = `
+                <div class="item-preview">
+                    <button class="close-preview" onclick="document.getElementById('item-preview').classList.remove('show')">x</button>
+                    <h2>Client # ${String(clientId).padStart(4, "0")}</h2>
+                    <h3>${clientData.name}</h3>
+                    <p><strong>Email:</strong> ${clientData.email}</p>
+                    <p><strong>Phone:</strong> ${clientData.phone}</p>
+                    <h4>Address</h4>
+                    <p>${clientData.address}, ${clientData.postcode}</p>
+                </div>
+            `;
+
+            itemPreviewEl.classList.add("show");
+        });
 
         clientEl.innerHTML = `
             <p>${String(clientId).padStart(4, "0")}</p>
