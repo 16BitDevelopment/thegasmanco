@@ -268,6 +268,8 @@ function loadOrders(allOrders, status) {
                     <p>${order.address}, ${order.location}, ${order.postcode}</p>
                     <h4>Order</h4>
                     <p>${order.cylinder}kg x ${order.quantity}</p>
+                    <h4>Special Instructions</h4>
+                    <p>${order.instructions}</p>
                     <h4>Payment</h4>
                     <p>${order.payment} - $${order.cost}</p>
                     ${order.status === 0 ? "<button class='complete-order' id='complete-order'>Complete Order</button>" : "<h4 style='color: #00FF00;'>Order Complete</h4>"}

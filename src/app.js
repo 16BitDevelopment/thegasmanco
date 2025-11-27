@@ -187,13 +187,25 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.post("/order", async (req, res) => {
-    const coupons = JSON.parse(process.env.COUPONS)
+    const coupons = JSON.parse(process.env.COUPONS);
+    const verification = {
+        name: /^[a-zA-Z\s'-]{2,}$/,
+        phone: /^\+?[0-9\s-]{6,15}$/,
+        email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        address: /^.{5,}$/,
+        postcode: /^[a-zA-Z0-9\s]{3,10}$/,
+        quantity: /^[1-9][0-9]{0,3}$/,
+        instructions: /^(?:\S+(?:\s+|$)){0,150}$/
+    };
 
     let formData = req.body;
     formData.gasCost = 155;
 
-    for (let item in formData) {
-        if (formData.hasOwnProperty(item) && formData[item] == "" && item != "coupon") return res.render("order", { serverMsg: "Invalid Form", colour: "red" });
+    for (let item in verification) {
+        if (verification.hasOwnProperty(item) && !verification[item].test(formData[item])) {
+            res.render("order", { serverMsg: `Invalid ${item} value`, colour: "red" });
+            return;
+        }
     }
 
     if (formData.coupon !== "") {

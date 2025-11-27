@@ -107,6 +107,23 @@ h1 {
     outline: none;
 }
 
+.order-form .form-group textarea {
+    min-height: 8em;
+    min-width: 100%;
+    max-width: 100%;
+
+    padding: 1em;
+
+    color: var(--accent-colour);
+
+    font-size: 1em;
+
+    background-color: transparent;
+    border: 1px solid var(--accent-colour);
+
+    outline: none;
+}
+
 .order-form button {
     padding: 0.75em 3em;
 
