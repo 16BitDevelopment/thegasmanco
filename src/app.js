@@ -27,18 +27,17 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 app.use(express.static('public'));
 
-async function addOrder(orderData, orderEmail, orderName, res) {
+async function addOrder(orderData, orderFbData, res) {
     let gasman = "admin"
     if (orderData.location != "Other") {
         gasman = getGasman(orderData.location);
     }
 
-    await db.ref(`${gasman}/${orderData.id}`).set(orderData);
+    await db.ref(`${gasman}/${orderData.id}`).set(orderFbData);
 
     console.log(`Added order with # ${orderData.id}`);
 
-    orderData.email = orderEmail;
-    orderData.name = orderName;
+    // Emails
 
     sendInvoiceEmail(orderData);
 
@@ -144,16 +143,15 @@ async function sendOrder(orderData, res) {
     // Get client id
     orderData.clientId = await getClientId(orderData);
 
-    const orderEmail = orderData.email;
-    const orderName = orderData.name;
+    const orderFbData = {...orderData};
 
-    delete orderData.name;
-    delete orderData.address;
-    delete orderData.postcode;
-    delete orderData.email;
-    delete orderData.phone;
+    delete orderFbData.name;
+    delete orderFbData.address;
+    delete orderFbData.postcode;
+    delete orderFbData.email;
+    delete orderFbData.phone;
 
-    addOrder(orderData, orderEmail, orderName, res);
+    addOrder(orderData, orderFbData, res);
 }
 
 app.post("/webhook", express.raw({ type: "application/json" }), (req, res) => {

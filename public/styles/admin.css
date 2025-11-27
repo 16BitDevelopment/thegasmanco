@@ -444,6 +444,34 @@
     cursor: pointer;
 }
 
+.admin-container .clients .clients-menu .clients-search {
+    display: flex;
+}
+
+.admin-container .clients .clients-menu .clients-search input {
+    padding: 0.5em;
+
+    background-color: transparent;
+    border: 1px solid var(--primary-font-colour);
+    border-top-right-radius: 0.5em;
+    border-bottom-right-radius: 0.5em;
+
+    outline: none;
+}
+
+.admin-container .clients .clients-menu .clients-search select {
+    padding: 0.5em;
+
+    color: white;
+
+    background-color: var(--primary-font-colour);
+    border: none;
+    border-top-left-radius: 0.5em;
+    border-bottom-left-radius: 0.5em;
+
+    outline: none;
+}
+
 .admin-container .clients .client {
     width: 100%;
 

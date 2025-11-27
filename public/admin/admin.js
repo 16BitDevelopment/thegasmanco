@@ -45,11 +45,18 @@ const errorEl = document.getElementById("error-msg");
 const adminContainerEl = document.getElementById("admin-container");
 const ordersEl = document.getElementById("orders");
 const clientsEl = document.getElementById("clients");
+
 const showOrdersBtn = document.getElementById("show-orders-btn");
 const showClientsBtn = document.getElementById("show-clients-btn");
+
 const itemPreviewEl = document.getElementById("item-preview");
+
 const statusIncompleteEl = document.getElementById("status-incomplete");
 const statusCompleteEl = document.getElementById("status-complete");
+
+const clientsFilterEl = document.getElementById("client-filter");
+const clientsSearchEl = document.getElementById("client-search");
+
 const clientsPageEl = document.getElementById("clients-page");
 const clientsPageNextEl = document.getElementById("clients-page-next");
 const clientsPageBackEl = document.getElementById("clients-page-back");
@@ -138,6 +145,14 @@ statusCompleteEl.addEventListener("change", (event) => {
 
         getAllOrders(1);
     }
+});
+
+clientsFilterEl.addEventListener("change", (event) => {
+    getAllClients(clientPage - 1);
+});
+
+clientsSearchEl.addEventListener("change", (event) => {
+    getAllClients(clientPage - 1);
 });
 
 clientsPageNextEl.addEventListener("click", (event) => {
@@ -336,6 +351,46 @@ function loadOrders(allOrders, status) {
 }
 
 async function getAllClients(page = 0) {
+    document.querySelectorAll(".client").forEach((el) => {
+        el.remove();
+    });
+
+    const results = [];
+    
+    const filter = clientsFilterEl.value;
+    const search = clientsSearchEl.value;
+
+    if (search !== "") {
+        if (filter === "id") {
+            if (allClients.hasOwnProperty(search)) {
+                loadClients(page);
+            }
+
+            filterQ = query(
+                get(ref(db, `clients`)),
+                orderByChild(filter.value),
+                equalTo(search)
+            );
+        }
+
+        let filterQ = ref(db, `clients/${search}`);
+
+        if (filter !== "id") {
+            filterQ = query(
+                get(ref(db, `clients`)),
+                orderByChild(filter.value),
+                equalTo(search)
+            );
+        }
+
+        const clientsSnapshot = await get(filterQ);
+        const filteredClients = clientsSnapshot.val();
+
+        loadClients(page, filteredClients);
+
+        return;
+    }
+
     const clientsNumSnapshot = await get(ref(db, `client`));
     clientsNum = clientsNumSnapshot.val();
 
@@ -352,7 +407,13 @@ async function getAllClients(page = 0) {
     for (let i = 0; i < pagelength; i++) {
         const clientId = page * pagelength + i + 1;
 
-        if (allClients.hasOwnProperty(clientId) || clientId > clientsNum) {
+        if (clientId > clientsNum) continue;
+
+        if (allClients.hasOwnProperty(clientId)) {
+            const item = allClients[clientId];
+            item.id = clientId;
+            results.push(item);
+
             continue;
         }
 
@@ -367,26 +428,23 @@ async function getAllClients(page = 0) {
             address: clientData.address,
             postcode: clientData.postcode
         };
+
+        const item = allClients[clientId];
+        item.id = clientId;
+        results.push(item);
     }
 
-    loadClients(page)
+    console.log(results)
+
+    loadClients(page, results)
 }
 
-function loadClients(page = 0) {
+function loadClients(page = 0, clients) {
     clientsPageEl.innerHTML = `Page ${clientPage} / ${Math.ceil(clientsNum / pagelength)}`;
 
-    document.querySelectorAll(".client").forEach((el) => {
-        el.remove();
-    });
+    for (let i = 0; i < clients.length; i++) {
 
-    for (let i = 0; i < pagelength; i++) {
-        const clientId = page * pagelength + i + 1;
-
-        if (clientId > clientsNum) {
-            continue;
-        }
-
-        const clientData = allClients[clientId];
+        const clientData = clients[i];
 
         const clientEl = document.createElement("div");
         clientEl.className = "client"; 
@@ -395,7 +453,7 @@ function loadClients(page = 0) {
             itemPreviewEl.innerHTML = `
                 <div class="item-preview">
                     <button class="close-preview" onclick="document.getElementById('item-preview').classList.remove('show')">x</button>
-                    <h2>Client # ${String(clientId).padStart(4, "0")}</h2>
+                    <h2>Client # ${String(clientData.id).padStart(4, "0")}</h2>
                     <h3>${clientData.name}</h3>
                     <p><strong>Email:</strong> ${clientData.email}</p>
                     <p><strong>Phone:</strong> ${clientData.phone}</p>
@@ -408,7 +466,7 @@ function loadClients(page = 0) {
         });
 
         clientEl.innerHTML = `
-            <p>${String(clientId).padStart(4, "0")}</p>
+            <p>${String(clientData.id).padStart(4, "0")}</p>
             <p>${clientData.name}</p>
             <p>${clientData.email}</p>
             <p>${clientData.phone}</p>

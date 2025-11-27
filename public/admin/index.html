@@ -58,6 +58,17 @@
             </div>
             <div class="clients" id="clients">
                 <div class="clients-menu">
+                    <div class="clients-search" style="display: none;">
+                        <select name="client-filter" id="client-filter">
+                            <option value="id">Client #</option>
+                            <option value="name">Name</option>
+                            <option value="email">Email</option>
+                            <option value="phone">Phone</option>
+                            <option value="address">Address</option>
+                            <option value="postcode">Postcode</option>
+                        </select>
+                        <input type="text" id="client-search" placeholder="Search...">
+                    </div>
                     <div class="clients-page">
                         <button id="clients-page-back">&lt;</button>
                         <p id="clients-page">Page - / -</p>

@@ -24,6 +24,8 @@ oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 
 //YOU CAN PASS MORE ARGUMENTS TO THIS FUNCTION LIKE CC, TEMPLATES, ATTACHMENTS ETC. IM JUST KEEPING IT SIMPLE
 export async function sendInvoiceEmail(orderData) {
+    getInvoicePdf(orderData);
+
     const transport = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -50,10 +52,10 @@ export async function sendInvoiceEmail(orderData) {
             console.log(error);
         } else {
             console.log("Order invoice email sent");
+            deleteInvoice(orderData.id);
+            console.log("Order invoice deleted");
         }
     });
-
-    getInvoicePdf(orderData);
 };
 
 export async function sendNotificationEmail(orderData, toEmail) {
