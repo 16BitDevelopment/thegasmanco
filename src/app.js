@@ -221,8 +221,6 @@ app.post("/order", async (req, res) => {
     formData.time = Date.now();
     formData.status = 0;
 
-    if (formData.quantity < 0) return res.render("order", { serverMsg: "Invalid Form", colour: "red" });
-
     if (formData.payment === "Card") {
         const stripeCost = Math.round((formData.cost * 1.0175 + 0.30) * 100);
 
