@@ -25,6 +25,7 @@ export function getGasman(location) {
         "Mcleods Shoot",
         "Skinners Shoot",
         "South Golden Beach",
+        "Suffolk Park",
         "Telofa",
         "Tyagrah",
         "Yelgun",
