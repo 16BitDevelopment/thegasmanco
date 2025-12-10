@@ -241,6 +241,8 @@ function getAllOrders(status = 0) {
 }
 
 function loadOrders(allOrders, status) {
+    allOrders.sort((a, b) => b.time - a.time);
+
     console.log(allOrders); // Logs after all fetches are done
 
     document.querySelectorAll(".order").forEach((el) => {
