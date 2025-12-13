@@ -203,17 +203,23 @@ function getAllOrders(status = 0) {
             for (let order in orders) {
                 const orderData = JSON.parse(JSON.stringify(orders[order]));
                 if (orderData.hasOwnProperty("clientId")) {
-                    const clientDetails = await getClientDetails(orderData.clientId);
 
-                    orderData.name = clientDetails.name;
-                    orderData.email = clientDetails.email;
-                    orderData.phone = clientDetails.phone;
-                    orderData.address = clientDetails.address;
-                    orderData.postcode = clientDetails.postcode;
+                    if (orderData.clientId !== -1) {
+                        const clientDetails = await getClientDetails(orderData.clientId);
+
+                        orderData.name = clientDetails.name;
+                        orderData.email = clientDetails.email;
+                        orderData.phone = clientDetails.phone;
+                        orderData.address = clientDetails.address;
+                        orderData.postcode = clientDetails.postcode;
+                    }
                 }
 
                 orderData.gasman = location;
                 orderData.id = order;
+
+                console.log(`Recieved order # ${orderData.id}`)
+
                 allOrders.push(orderData);
             }
         } else {
@@ -262,6 +268,7 @@ function loadOrders(allOrders, status) {
                     <button class="close-preview" onclick="document.getElementById('item-preview').classList.remove('show')">x</button>
                     <h2>Order # ${order.id}</h2>
                     <h3>${order.name}</h3>
+                    <p style="font-size: 1em;">${order.clientId != -1 ? 'Client # ' + String(order.clientId).padStart(4, "0") : 'Guest Order'}</p>
                     <p style="font-size: 1em;">${order.email}</p>
                     <p style="font-size: 1em;">${order.phone}</p>
                     <h4>Time Of Request</h4>

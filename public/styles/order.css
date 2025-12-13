@@ -60,6 +60,7 @@ h1 {
 
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     gap: 0.5em;
 }
 
@@ -76,10 +77,12 @@ h1 {
 .order-form .form-group:has(input[type=checkbox]) {
     flex-direction: row;
     align-items: center;
+    justify-content: start;
 }
 
 .order-form .form-group .form-group:has(input[type=radio]) {
     flex-direction: row;
+    justify-content: start;
 }
 
 .order-form .form-group label span {

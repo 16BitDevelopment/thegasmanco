@@ -3,6 +3,7 @@ const mainFormEl = document.getElementById("main-form");
 
 const quantityEl = document.getElementById("quantity");
 
+const creditCardEl = document.getElementById("credit-card");
 const cardEl = document.getElementById("card");
 const cashEl = document.getElementById("cash");
 const directDepositEl = document.getElementById("direct-deposit");
@@ -36,8 +37,8 @@ quantityEl.addEventListener("change", (event) => {
     updateOrderTotal();
 });
 
-cardEl.addEventListener("change", (event) => {
-    if (cardEl.value === "Card") {
+creditCardEl.addEventListener("change", (event) => {
+    if (creditCardEl.value === "Credit-Card") {
         paymentInfoEl.innerHTML = `
             <p>Credit Card payments apply an additional 1.75% + $0.30 processing fee.</p>
         `;
@@ -47,8 +48,19 @@ cardEl.addEventListener("change", (event) => {
     }
 });
 
+cardEl.addEventListener("change", (event) => {
+    if (creditCardEl.value === "Credit-Card") {
+        paymentInfoEl.innerHTML = `
+            <p>Have your card ready on delivery.</p>
+        `;
+
+        stripeGST = false;
+        updateOrderTotal();
+    }
+});
+
 cashEl.addEventListener("change", (event) => {
-    if (cardEl.value === "Card") {
+    if (creditCardEl.value === "Credit-Card") {
         paymentInfoEl.innerHTML = `
             <p>Have your cash ready on delivery.</p>
         `;
@@ -59,7 +71,7 @@ cashEl.addEventListener("change", (event) => {
 });
 
 directDepositEl.addEventListener("change", (event) => {
-    if (cardEl.value === "Card") {
+    if (creditCardEl.value === "Credit-Card") {
         paymentInfoEl.innerHTML = `
             <p class="note">Please use your First and Last name as the Payment Description.</p>
             <p><strong>Account Name: </strong>BRUNSWICK GAS PTY LTD</p>

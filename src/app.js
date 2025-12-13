@@ -141,15 +141,23 @@ async function sendOrder(orderData, res) {
     orderData.id = `${year}${String(snapshot.val() + 1).padStart(4, "0")}`;
 
     // Get client id
-    orderData.clientId = await getClientId(orderData);
+    orderData.clientId = -1;
 
-    const orderFbData = {...orderData};
+    let orderFbData = {...orderData};
 
-    delete orderFbData.name;
-    delete orderFbData.address;
-    delete orderFbData.postcode;
-    delete orderFbData.email;
-    delete orderFbData.phone;
+    if (orderData.phone !== "") {
+        orderData.clientId = await getClientId(orderData);
+
+        orderFbData = {...orderData};
+
+        delete orderFbData.name;
+        delete orderFbData.address;
+        delete orderFbData.postcode;
+        delete orderFbData.email;
+        delete orderFbData.phone;
+    }
+
+    delete orderFbData.id;
 
     addOrder(orderData, orderFbData, res);
 }
@@ -202,6 +210,11 @@ app.post("/order", async (req, res) => {
     formData.gasCost = 155;
 
     for (let item in verification) {
+        if (item === "phone" && formData.phone == "") {
+            console.log("skip")
+            continue;
+        }
+
         if (verification.hasOwnProperty(item) && !verification[item].test(formData[item])) {
             res.render("order", { serverMsg: `Invalid ${item} value`, colour: "red" });
             return;
@@ -221,7 +234,7 @@ app.post("/order", async (req, res) => {
     formData.time = Date.now();
     formData.status = 0;
 
-    if (formData.payment === "Card") {
+    if (formData.payment === "Credit-Card") {
         const stripeCost = Math.round((formData.cost * 1.0175 + 0.30) * 100);
 
         const session = await stripe.checkout.sessions.create({
