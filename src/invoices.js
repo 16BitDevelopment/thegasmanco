@@ -31,6 +31,12 @@ export function getInvoicePdf(orderData) {
         // Acc details
         {
             text: `${orderData.id}`,
+            xPos: 410,
+            yPos: 134,
+            textSize: 10
+        },
+        {
+            text: `${orderData.id}`,
             xPos: 180,
             yPos: 162,
             textSize: 10

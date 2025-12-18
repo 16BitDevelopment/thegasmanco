@@ -52,7 +52,7 @@ async function addOrder(orderData, orderFbData, res) {
 
     sendNotificationEmail(orderData, gasmanEmail);
 
-    res.render("order", { serverMsg: "Order Created", colour: "green" });
+    res.render("order", { serverMsg: `Order #${orderData.id} Created`, colour: "green" });
 }
 
 async function getClientId(orderData) {

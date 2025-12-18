@@ -73,7 +73,7 @@ cashEl.addEventListener("change", (event) => {
 directDepositEl.addEventListener("change", (event) => {
     if (creditCardEl.value === "Credit-Card") {
         paymentInfoEl.innerHTML = `
-            <p class="note">Please use your First and Last name as the Payment Description.</p>
+            <p class="note">Please use your First and Last name as well as the order number (provided in the emailed invoice) as the Payment Description.</p>
             <p><strong>Account Name: </strong>BRUNSWICK GAS PTY LTD</p>
             <p><strong>BSB: </strong>067-873</p>
             <p><strong>Account Number: </strong>2081 9893</p>
