@@ -1,28 +1,12 @@
 import dotenv from "dotenv";
-import { google } from 'googleapis'
 import nodemailer from 'nodemailer'
 import { getInvoicePdf, deleteInvoice } from "./invoices.js";
 
 dotenv.config();
 
-/*POPULATE BELOW FIELDS WITH YOUR CREDETIALS*/
 
 const MY_EMAIL = "gasmanorder@gmail.com"
-const CLIENT_ID = process.env.GMAIL_CLIENT_ID;
-const CLIENT_SECRET = process.env.GMAIL_CLIENT_SECRET;
-const REFRESH_TOKEN = process.env.GMAIL_REFRESH_TOKEN;
-const REDIRECT_URI = "https://developers.google.com/oauthplayground"; //DONT EDIT THIS
-/*POPULATE ABOVE FIELDS WITH YOUR CREDETIALS*/
 
-const oAuth2Client = new google.auth.OAuth2(
-  CLIENT_ID,
-  CLIENT_SECRET,
-  REDIRECT_URI
-);
-
-oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
-
-//YOU CAN PASS MORE ARGUMENTS TO THIS FUNCTION LIKE CC, TEMPLATES, ATTACHMENTS ETC. IM JUST KEEPING IT SIMPLE
 export async function sendInvoiceEmail(orderData) {
     getInvoicePdf(orderData);
 

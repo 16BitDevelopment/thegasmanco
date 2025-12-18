@@ -1,7 +1,6 @@
 import express from "express";
 import admin from "firebase-admin";
 import dotenv from "dotenv";
-import Stripe from "stripe";
 import { sendInvoiceEmail, sendNotificationEmail } from "./send-email.js";
 import { getGasman } from "./gasman.js";
 
@@ -22,8 +21,6 @@ const app = express();
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 app.use(express.static('public'));
 
@@ -162,35 +159,6 @@ async function sendOrder(orderData, res) {
     addOrder(orderData, orderFbData, res);
 }
 
-app.post("/webhook", express.raw({ type: "application/json" }), (req, res) => {
-    console.log(1)
-
-    const sig = req.headers["stripe-signature"];
-    const endpointSecret = process.env.WEBHOOK_SECRET_KEY;
-
-    let event;
-    try {
-        event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
-    } catch (err) {
-        console.error("⚠️ Webhook signature verification failed:", err.message);
-        return res.status(400).send(`Webhook Error: ${err.message}`);
-    }
-
-    // ✅ Handle successful checkout
-    if (event.type === "checkout.session.completed") {
-        const session = event.data.object;
-        console.log("✅ Payment successful for session:", session.id);
-        // You can now run code here (save to DB, send email, etc.)
-    }
-
-    // ✅ Handle cancellation or other event types if needed
-    else if (event.type === "checkout.session.expired") {
-        console.log("❌ Checkout session expired or cancelled");
-    }
-
-    res.sendStatus(200);
-});
-
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -235,33 +203,50 @@ app.post("/order", async (req, res) => {
     formData.status = 0;
 
     if (formData.payment === "Credit-Card") {
-        const stripeCost = Math.round((formData.cost * 1.0175 + 0.30) * 100);
-
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types: ["card"],
-            mode: "payment",
-            line_items: [
-                {
-                    price_data: {
-                        currency: "aud",
-                        product_data: {
-                            name: `45kg LPG gas cylinder x ${formData.quantity}`
-                        },
-                        unit_amount: stripeCost,
-                    },
-                    quantity: 1,
-                },
-            ],
-            success_url: "http://localhost:3000/",
-            cancel_url: "http://localhost:3000/order",
-        });
-        res.redirect(303, session.url);
-
-        return;
+        const squareCost = Math.round((formData.cost * 1.0175 + 0.30) * 100);
     }
     
     sendOrder(formData, res);
 });
+
+
+
+
+
+
+
+
+import { Client, Environment } from "square";
+
+const client = new Client({
+  environment: Environment.Sandbox, // switch to Production later
+  accessToken: process.env.SQUARE_ACCESS_TOKEN
+});
+
+app.post("/pay", async (req, res) => {
+  const { token, amount } = req.body;
+
+  try {
+    const response = await client.paymentsApi.createPayment({
+      sourceId: token,
+      amountMoney: {
+        amount: amount, // in cents
+        currency: "AUD"
+      },
+      idempotencyKey: crypto.randomUUID()
+    });
+
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+
+
+
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Server started on port ${PORT}`));
