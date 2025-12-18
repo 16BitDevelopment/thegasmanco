@@ -25,6 +25,7 @@ export function getGasman(location) {
         "Hayters Hill",
         "Mcleods Shoot",
         "Mooball",
+        "New Brighton",
         "Skinners Shoot",
         "South Golden Beach",
         "Suffolk Park",
