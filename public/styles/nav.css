@@ -94,7 +94,7 @@ nav .hamburger-btn {
 
         padding: 2.5rem;
 
-        background-color: var(--primary-font-colour);
+        background-color: var(--accent-colour);
 
         transition: translate 0.25s;
     }
