@@ -209,44 +209,5 @@ app.post("/order", async (req, res) => {
     sendOrder(formData, res);
 });
 
-
-
-
-
-
-
-
-import { Client, Environment } from "square";
-
-const client = new Client({
-  environment: Environment.Sandbox, // switch to Production later
-  accessToken: process.env.SQUARE_ACCESS_TOKEN
-});
-
-app.post("/pay", async (req, res) => {
-  const { token, amount } = req.body;
-
-  try {
-    const response = await client.paymentsApi.createPayment({
-      sourceId: token,
-      amountMoney: {
-        amount: amount, // in cents
-        currency: "AUD"
-      },
-      idempotencyKey: crypto.randomUUID()
-    });
-
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-
-
-
-
-
-
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Server started on port ${PORT}`));
