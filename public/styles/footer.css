@@ -97,7 +97,8 @@ footer .footer-text .footer-text-bottom {
     gap: 2.5em;
 }
 
-footer .footer-text .footer-text-bottom p {
+footer .footer-text .footer-text-bottom p,
+footer .footer-text .footer-text-bottom span {
     color: white;
 }
 
