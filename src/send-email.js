@@ -52,7 +52,7 @@ export async function sendNotificationEmail(orderData, toEmail) {
     });
 
     let mailOptions = {
-        from: 'MY_EMAIL',
+        from: MY_EMAIL,
         to: toEmail,
         subject: `New Order #${orderData.id}`,
         html: `
@@ -67,6 +67,35 @@ export async function sendNotificationEmail(orderData, toEmail) {
             console.log(error);
         } else {
             console.log(`Order notification email sent to ${toEmail}`);
+        }
+    });
+}
+
+export async function sendContactEmail(emailData) {
+    const transport = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: "gasmanorder@gmail.com",
+            pass: process.env.GOOGLE_APP_PASSWORD,
+        },
+    });
+
+    let mailOptions = {
+        from: MY_EMAIL,
+        to: MY_EMAIL,
+        subject: `New message from ${emailData.name}`,
+        html: `
+            <p><strong>Name:</strong> ${emailData.name}</p>
+            <p><strong>Email:</strong> ${emailData.email}</p>
+            <p><strong>Message:</strong><br>${emailData.message}</p>
+        `
+    };
+
+    transport.sendMail(mailOptions, function(error, info){
+        if (error) {
+            console.log(error);
+        } else {
+            console.log(`Contact email sent`);
         }
     });
 }

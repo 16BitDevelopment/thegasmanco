@@ -1,0 +1,95 @@
+h1 {
+    margin: 1em 2em;
+
+    font-size: 5em;
+    text-align: center;
+
+    text-align: center;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+
+    padding: 5em 0;
+}
+
+main form {
+    width: 25%;
+    min-width: 300px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5em;
+}
+
+main form .form-group {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+}
+
+main form .form-group label {
+    font-size: 1.5em;
+    font-weight: 500;
+}
+
+main form .form-group label span {
+    color: var(--secondary-font-colour);
+}
+
+main form .form-group input {
+    color: var(--accent-colour);
+    font-size: 1.15em;
+
+    background-color: transparent;
+    
+    border: none;
+    border-bottom: 1px solid var(--accent-colour);
+
+    outline: none;
+}
+
+main form .form-group textarea {
+    min-height: 5em;
+    min-width: 100%;
+    max-width: 100%;
+
+    padding: 0.5em;
+
+    color: var(--accent-colour);
+    font-size: 1.15em;
+
+    background-color: transparent;
+
+    border: 1px solid var(--accent-colour);
+    border-radius: 0.5em;
+
+    outline: none;
+}
+
+main form button {
+    width: fit-content;
+
+    padding: 0.75em 2.5em;
+
+    color: var(--accent-colour);
+
+    background-color: transparent;
+
+    border: 1px solid var(--accent-colour);
+    border-radius: 1em;
+
+    cursor: pointer;
+
+    transition: all 0.25s;
+}
+
+main form button:hover {
+    color: white;
+
+    background-color: var(--accent-colour);
+}

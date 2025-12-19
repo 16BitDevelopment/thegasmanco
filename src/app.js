@@ -1,7 +1,7 @@
 import express from "express";
 import admin from "firebase-admin";
 import dotenv from "dotenv";
-import { sendInvoiceEmail, sendNotificationEmail } from "./send-email.js";
+import { sendInvoiceEmail, sendNotificationEmail, sendContactEmail } from "./send-email.js";
 import { getGasman } from "./gasman.js";
 
 dotenv.config();
@@ -171,7 +171,7 @@ app.post("/order", async (req, res) => {
         address: /^.{5,}$/,
         postcode: /^[a-zA-Z0-9\s]{3,10}$/,
         quantity: /^[1-9][0-9]{0,3}$/,
-        instructions: /^(?:\S+(?:\s+|$)){0,150}$/
+        instructions: /^.{0,150}$/
     };
 
     let formData = req.body;
@@ -179,12 +179,12 @@ app.post("/order", async (req, res) => {
 
     for (let item in verification) {
         if (item === "phone" && formData.phone == "") {
-            console.log("skip")
             continue;
         }
 
         if (verification.hasOwnProperty(item) && !verification[item].test(formData[item])) {
             res.render("order", { serverMsg: `Invalid ${item} value`, colour: "red" });
+
             return;
         }
     }
@@ -193,7 +193,7 @@ app.post("/order", async (req, res) => {
         if (coupons.hasOwnProperty(formData.coupon)) {
             formData.gasCost = coupons[formData.coupon];
         } else {
-            res.render("order", {serverMsg: "Invalid Coupon", colour: "red"})
+            res.render("order", {serverMsg: "Invalid Coupon", colour: "red"});
         }
     }
 
@@ -207,6 +207,36 @@ app.post("/order", async (req, res) => {
     }
     
     sendOrder(formData, res);
+});
+
+app.post("/contact", (req, res) => {
+    const verification = {
+        name: /^[a-zA-Z\s'-]{2,}$/,
+        email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        message: /^.{0,150}$/
+    };
+
+    let emailData = req.body;
+
+    for (let item in verification) {
+        if (verification.hasOwnProperty(item) && !verification[item].test(emailData[item])) {
+            res.render("contact", {serverMsg: "Invalid Form", colour: "red"});
+
+            return;
+        }
+    }
+
+    sendContactEmail(emailData);
+
+    res.render("contact", {serverMsg: "Email Sent", colour: "green"});
+});
+
+app.get("/order", (req, res) => {
+    res.render("order", {serverMsg: "", colour: ""});
+});
+
+app.get("/contact", (req, res) => {
+    res.render("contact", {serverMsg: "", colour: ""});
 });
 
 const PORT = process.env.PORT || 3000;
