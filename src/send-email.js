@@ -81,7 +81,7 @@ export async function sendContactEmail(emailData) {
     });
 
     let mailOptions = {
-        from: MY_EMAIL,
+        from: emailData.email,
         to: MY_EMAIL,
         subject: `New message from ${emailData.name}`,
         html: `
