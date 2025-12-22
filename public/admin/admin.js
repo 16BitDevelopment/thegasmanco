@@ -194,34 +194,39 @@ function getAllOrders(status = 0) {
             equalTo(status)
         );
 
-        const snapshot = await get(q);
-        if (snapshot.exists()) {
-            const orders = snapshot.val();
+        try {
+            const snapshot = await get(q);
 
-            for (let order in orders) {
-                const orderData = JSON.parse(JSON.stringify(orders[order]));
-                if (orderData.hasOwnProperty("clientId")) {
+            if (snapshot.exists()) {
+                const orders = snapshot.val();
 
-                    if (orderData.clientId !== -1) {
-                        const clientDetails = await getClientDetails(orderData.clientId);
+                for (let order in orders) {
+                    const orderData = JSON.parse(JSON.stringify(orders[order]));
+                    if (orderData.hasOwnProperty("clientId")) {
 
-                        orderData.name = clientDetails.name;
-                        orderData.email = clientDetails.email;
-                        orderData.phone = clientDetails.phone;
-                        orderData.address = clientDetails.address;
-                        orderData.postcode = clientDetails.postcode;
+                        if (orderData.clientId !== -1) {
+                            const clientDetails = await getClientDetails(orderData.clientId);
+
+                            orderData.name = clientDetails.name;
+                            orderData.email = clientDetails.email;
+                            orderData.phone = clientDetails.phone;
+                            orderData.address = clientDetails.address;
+                            orderData.postcode = clientDetails.postcode;
+                        }
                     }
+
+                    orderData.gasman = location;
+                    orderData.id = order;
+
+                    console.log(`Recieved order # ${orderData.id}`)
+
+                    allOrders.push(orderData);
                 }
-
-                orderData.gasman = location;
-                orderData.id = order;
-
-                console.log(`Recieved order # ${orderData.id}`)
-
-                allOrders.push(orderData);
+            } else {
+                console.log(`No data available for ${location}`);
             }
-        } else {
-            console.log(`No data available for ${location}`);
+        } catch (e) {
+            console.log(`Access denied for location ${location}`)
         }
     };
 
