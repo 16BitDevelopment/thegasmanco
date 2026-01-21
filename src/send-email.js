@@ -52,7 +52,7 @@ export async function sendNotificationEmail(orderData, toEmail) {
     });
 
     let mailOptions = {
-        from: MY_EMAIL,
+        from: "The Gas Man Co",
         to: toEmail,
         subject: `New Order #${orderData.id}`,
         html: `
@@ -81,7 +81,7 @@ export async function sendContactEmail(emailData) {
     });
 
     let mailOptions = {
-        from: emailData.email,
+        from: "The Gas Man Co",
         to: MY_EMAIL,
         subject: `New message from ${emailData.name}`,
         html: `
