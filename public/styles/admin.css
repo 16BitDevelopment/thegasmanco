@@ -171,7 +171,7 @@
     color: white;
 }
 
-.item-preview-container .item-preview .complete-order {
+.item-preview-container .item-preview .order-status {
     margin-top: 2.5em;
 
     padding: 0.5em 1em;
@@ -188,7 +188,7 @@
     transition: background-color 0.25s, color 0.25s;
 }
 
-.item-preview-container .item-preview .complete-order:hover {
+.item-preview-container .item-preview .order-status:hover {
     color: var(--accent-colour);
     background-color: white;
 }
@@ -332,12 +332,9 @@
     cursor: pointer;
 }
 
-.admin-container .orders .orders-menu .order-status:has(input#status-incomplete:checked) label#status-incomplete {
-    color: white;
-    background-color: var(--primary-font-colour);
-}
-
-.admin-container .orders .orders-menu .order-status:has(input#status-complete:checked) label#status-complete {
+.admin-container .orders .orders-menu .order-status:has(input#status-incomplete:checked) label#status-incomplete,
+.admin-container .orders .orders-menu .order-status:has(input#status-delivered:checked) label#status-delivered,
+.admin-container .orders .orders-menu .order-status:has(input#status-paid:checked) label#status-paid {
     color: white;
     background-color: var(--primary-font-colour);
 }

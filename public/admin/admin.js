@@ -50,7 +50,8 @@ const showClientsBtn = document.getElementById("show-clients-btn");
 const itemPreviewEl = document.getElementById("item-preview");
 
 const statusIncompleteEl = document.getElementById("status-incomplete");
-const statusCompleteEl = document.getElementById("status-complete");
+const statusDeliveredEl = document.getElementById("status-delivered");
+const statusPaidEl = document.getElementById("status-paid");
 
 const clientsFilterEl = document.getElementById("client-filter");
 const clientsSearchEl = document.getElementById("client-search");
@@ -59,8 +60,12 @@ const clientsPageEl = document.getElementById("clients-page");
 const clientsPageNextEl = document.getElementById("clients-page-next");
 const clientsPageBackEl = document.getElementById("clients-page-back");
 
-let allIncompleteOrders;
-let allCompleteOrders;
+let allIncompleteOrders = [];
+let allDeliveredOrders = [];
+let allPaidOrders = [];
+let incompleteOrdersRecieved = false;
+let deliveredOrdersRecieved = false;
+let paidOrdersRecieved = false;
 let allClients = {};
 let clientsNum;
 let clientPage = 1;
@@ -135,13 +140,23 @@ statusIncompleteEl.addEventListener("change", (event) => {
     }
 });
 
-statusCompleteEl.addEventListener("change", (event) => {
-    if (statusCompleteEl.value == "on") {
+statusDeliveredEl.addEventListener("change", (event) => {
+    if (statusDeliveredEl.value == "on") {
         document.querySelectorAll(".order").forEach((el) => {
             el.remove();
         });
 
         getAllOrders(1);
+    }
+});
+
+statusPaidEl.addEventListener("change", (event) => {
+    if (statusDeliveredEl.value == "on") {
+        document.querySelectorAll(".order").forEach((el) => {
+            el.remove();
+        });
+
+        getAllOrders(2);
     }
 });
 
@@ -175,12 +190,16 @@ async function getClientDetails(clientId) {
 }
 
 function getAllOrders(status = 0) {
-    if (status === 0 && allIncompleteOrders) {
+    if (status === 0 && incompleteOrdersRecieved) {
         loadOrders(allIncompleteOrders);
 
         return;
-    } else if (status === 1 && allCompleteOrders) {
-        loadOrders(allCompleteOrders);
+    } else if (status === 1 && deliveredOrdersRecieved) {
+        loadOrders(allDeliveredOrders);
+        
+        return;
+    } else if (status === 2 && paidOrdersRecieved) {
+        loadOrders(allPaidOrders);
         
         return;
     }
@@ -239,8 +258,16 @@ function getAllOrders(status = 0) {
 
         if (status === 0) {
             allIncompleteOrders = Array.from(allOrders);
+
+            incompleteOrdersRecieved = true;
         } else if (status === 1) {
-            allCompleteOrders = Array.from(allOrders);
+            allDeliveredOrders = Array.from(allOrders);
+
+            deliveredOrdersRecieved = true;
+        } else if (status === 2) {
+            allPaidOrders = Array.from(allOrders);
+
+            paidOrdersRecieved = true;
         }
 
         loadOrders(allOrders, status);
@@ -284,24 +311,29 @@ function loadOrders(allOrders, status) {
                     <p>${order.instructions || "No instructions"}</p>
                     <h4>Payment</h4>
                     <p>${order.payment} - $${order.cost}</p>
-                    ${order.status === 0 ? "<button class='complete-order' id='complete-order'>Complete Order</button>" : "<h4 style='color: #00FF00;'>Order Complete</h4>"}
+                    ${order.status === 0 ? "<button class='order-status' id='order-status'>Order Delivered</button>" : order.status === 1 ? "<button class='order-status' id='order-status'>Order Paid</button>" : "<h4 style='color: #00FF00;'>Order Complete</h4>"}
                     <button class='delete-order' id='delete-order'>Delete Order</button>
                 </div>
             `;
 
-            const completeOrderBtn = document.getElementById("complete-order");
+            const orderStatusBtn = document.getElementById("order-status");
             const deleteOrderBtn = document.getElementById("delete-order");
 
-            if (completeOrderBtn) {
-                completeOrderBtn.addEventListener("click", (event) => {
-                    set(ref(db, `${order.gasman}/${order.id}/status`), 1);
+            if (orderStatusBtn) {
+                orderStatusBtn.addEventListener("click", (event) => {
+                    order.status += 1;
 
-                    order.status = 1;
+                    set(ref(db, `${order.gasman}/${order.id}/status`), order.status);
 
                     orderEl.remove();
 
-                    allIncompleteOrders = allIncompleteOrders.filter((item) => item !== order);
-                    allCompleteOrders.push(order)
+                    if (order.status === 1) {
+                        allIncompleteOrders = allIncompleteOrders.filter((item) => item !== order);
+                        allDeliveredOrders.push(order);
+                    } else if (order.status === 2) {
+                        allDeliveredOrders = allDeliveredOrders.filter((item) => item !== order);
+                        allPaidOrders.push(order);
+                    }
 
                     itemPreviewEl.classList.remove("show");
                 });
