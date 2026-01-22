@@ -541,3 +541,9 @@
         font-size: 0.8rem;
     }
 }
+
+@media (max-width: 450px) {
+    .admin-container .orders .orders-menu {
+        font-size: 0.8em;
+    }
+}

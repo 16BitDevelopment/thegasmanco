@@ -53,6 +53,8 @@ const statusIncompleteEl = document.getElementById("status-incomplete");
 const statusDeliveredEl = document.getElementById("status-delivered");
 const statusPaidEl = document.getElementById("status-paid");
 
+const recievingOrdersEl = document.getElementById("recieving-orders");
+
 const clientsFilterEl = document.getElementById("client-filter");
 const clientsSearchEl = document.getElementById("client-search");
 
@@ -220,6 +222,8 @@ function getAllOrders(status = 0) {
                 const orders = snapshot.val();
 
                 for (let order in orders) {
+                    window.orderNum += 1;
+
                     const orderData = JSON.parse(JSON.stringify(orders[order]));
                     if (orderData.hasOwnProperty("clientId")) {
 
@@ -237,7 +241,9 @@ function getAllOrders(status = 0) {
                     orderData.gasman = location;
                     orderData.id = order;
 
-                    console.log(`Recieved order # ${orderData.id}`)
+                    console.log(`Recieved order # ${orderData.id}`);
+
+                    recievingOrdersEl.innerHTML = `Recieved Order # ${orderData.id} (${window.orderNum})`;
 
                     allOrders.push(orderData);
                 }
@@ -252,9 +258,12 @@ function getAllOrders(status = 0) {
     const locations = ["admin", "mullum", "byron", "federal"];
 
     const getOrders = async () => {
+        window.orderNum = 0;
         for (const location of locations) {
             await fetchFromLocation(location);
         }
+
+        recievingOrdersEl.innerHTML = "";
 
         if (status === 0) {
             allIncompleteOrders = Array.from(allOrders);
@@ -359,7 +368,9 @@ function loadOrders(allOrders, status) {
                     if (status === 0) {
                         allIncompleteOrders = allIncompleteOrders.filter((item) => item !== order)
                     } else if (status === 1) {
-                        allCompleteOrders = allCompleteOrders.filter((item) => item !== order)
+                        allDeliveredOrders = allDeliveredOrders.filter((item) => item !== order)
+                    } else if (status === 2) {
+                        allPaidOrders = allPaidOrders.filter((item) => item !== order)
                     }
 
                     getAllOrders(status)
