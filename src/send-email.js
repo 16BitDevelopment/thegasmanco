@@ -19,7 +19,7 @@ export async function sendInvoiceEmail(orderData) {
     });
 
     let mailOptions = {
-        from: MY_EMAIL,
+        from: "The Gas Man Co",
         to: orderData.email,
         subject: `Gas Man Co Order Invoice #${orderData.id}`,
         html: `<p>Hello <strong>${orderData.name}</strong>,</p><p>Thank you for your gas order. Please find attatched your order invoice.</p><p>Best,</p><p><strong>The Gas Man Co.</strong></p>`,

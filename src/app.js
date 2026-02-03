@@ -165,7 +165,7 @@ app.use(express.json());
 app.post("/order", async (req, res) => {
     const coupons = JSON.parse(process.env.COUPONS);
     const verification = {
-        name: /^[a-zA-Z\s'-]{2,}$/,
+        name: /^[A-Za-z]+(?:[ '-][A-Za-z]+)*$/,
         phone: /^\+?[0-9\s-]{6,15}$/,
         email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
         address: /^.{5,}$/,
