@@ -118,6 +118,6 @@ export function deleteInvoice(invoiceId) {
             console.error('Error deleting invoice:', err);
             return;
         }
-        console.log('Invoice deleted successfully!');
+        console.log('Order invoice deleted');
     });
 }

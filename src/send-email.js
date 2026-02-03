@@ -37,7 +37,6 @@ export async function sendInvoiceEmail(orderData) {
         } else {
             console.log("Order invoice email sent");
             deleteInvoice(orderData.id);
-            console.log("Order invoice deleted");
         }
     });
 };
